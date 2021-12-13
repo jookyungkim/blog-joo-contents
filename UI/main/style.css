@@ -1,0 +1,48 @@
+/* Google Web Font */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500&display=swap');
+
+/* Fontawesome 4.7 */
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+* {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-size: 15px;
+    margin: 0;
+    color: #222;
+    line-height: 1.5em;
+    font-weight: 300;
+  }
+  
+  /* Reset CSS */
+  a {
+    text-decoration: none;
+  }
+  h1,h2,h3,h4,h5,h6 {
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.3em;
+  }
+  input, button, textarea {
+    outline: none;
+  }
+  button {
+    cursor: pointer;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  /* Common CSS */
+  .inner {
+    width: 1300px;
+    margin: auto;
+  }
