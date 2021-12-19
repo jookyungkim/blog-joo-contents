@@ -18,6 +18,7 @@ body {
   color: #222;
   line-height: 1.5em;
   font-weight: 300;
+  height: 100%;
 }
   
 /* Reset CSS */
@@ -156,7 +157,9 @@ nav {
 }
 
 .visitant-detail h4 span {
-  margin-left: 5px;
+  margin-left: 8px;
+  font-size: 0.8em;
+  color: rgb(107, 107, 107);
 }
 
 .nav-title a {
@@ -186,17 +189,24 @@ nav {
 .category-list a i {}
 .category-list a span {}
 
+.nav-trigger {
+  display: none;
+}
+
+/* MAIN */
 .contents {
   /* border: 1px solid black; */
   width: 900px;
 }
 
+/* SLIDER */
 .slider-fild {
   border: 1px solid black;
   width: 100%;
   height: 400px;
 }
 
+/* POST */
 .posts {
   display: flex;
   flex-wrap: wrap;
@@ -223,5 +233,121 @@ nav {
 .post a h4 {
   font-size: 1.3em;
 }
-.post a p {
+
+/* footer */
+.footer-wapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid red; */
+  height: 50px;
+}
+
+.footer-wapper i {
+  margin-left: 10px;
+}
+
+
+@media screen and (max-width: 768px) {
+
+  /* common */
+  .inner {
+    width: 100%;
+  }
+
+  /* header */
+  .header-wrapper {
+    position: fixed;
+    width: 100%;
+    background-color: white;
+  }
+
+  .header-wrapper hr {
+    margin-bottom: 0px;
+  }
+
+  .story-group {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  /* nav */
+  .nav {
+    position: fixed;
+    background-color: rgb(253, 253, 253);
+    /* width: 0px; */
+    display: none;
+  }
+
+  .nav-inner {
+    width: 350px;
+  }
+
+  .nav-wrapper {
+    margin-left: 15px;
+  }
+  .nav-title {
+    margin-top: 50px;
+  }
+
+  .nav-trigger {
+    display: block;
+    /* border: 1px solid red; */
+    width: 30px;
+    height: 16px;
+    position: absolute;
+    /* right: 7px; */
+    left: 15px;
+    top: 15px;
+  }
+
+  .nav-trigger span {
+    position: absolute;
+    height: 1px;
+    background-color: #000;
+    width: 100%;
+    transition: 0.3s;
+  }
+  .nav-trigger span:nth-child(1) {
+    top: 0;
+  }
+  .nav-trigger span:nth-child(2) {
+    top: 50%;
+  }
+  .nav-trigger span:nth-child(3) {
+    top: 100%;
+  }
+
+  .nav-trigger.active span:nth-child(1) {
+    top: 50%;
+    transform: rotate(45deg);
+  }
+  .nav-trigger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-trigger.active span:nth-child(3) {
+    top: 50%;
+    transform: rotate(-45deg);
+  }
+  
+  /* main */
+  .slider-fild {
+    margin-top: 74px;
+  }
+
+  .posts {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .post {
+    margin: 0px;
+    width: 100%;
+    height: 400px;
+  }
+
+  .post a img {
+    height: 300px;
+  }
+
 }
