@@ -1,0 +1,57 @@
+.login-container {
+  width: 100%;
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.login-container .login-inner {
+  width: 600px;
+  height: 600px;
+}
+
+.login-container .login-wrapper {
+  height: 100%;
+  border: 1px solid #b8b8b8;
+}
+
+.login-container .login-wrapper .login-form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+}
+
+.login-container .login-wrapper .login-form input {
+  padding: .8em 3.5em;
+}
+
+.login-container .login-wrapper .login-form .id-gorup {
+  margin-bottom: 10px;
+}
+
+.login-container .login-wrapper .login-form .pwd-group {
+  margin-bottom: 10px;
+}
+
+.login-container .login-wrapper .login-form button {
+  padding: .7em 7.5em;
+}
+/*# sourceMappingURL=style.css.map */
