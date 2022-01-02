@@ -1,0 +1,257 @@
+@import "../mixin";
+
+.postView-container {
+    width: 100%;
+    height: 100vh;
+}
+
+.postView-inner {
+    width: 900px;
+    margin: auto;
+}
+
+.postView-wrapper {
+    width: 100%;
+
+    .slider-form {
+        height: 200px;
+        border: 1px solid black;
+    }
+
+    .postView-main {
+        .post-detail {
+            height: 100px;
+            border: 1px solid blue;
+        }
+
+        .button-group {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+
+            .button-like-group {
+                display: flex;
+                height: 45px;
+
+                .common-button {
+                    margin-right: 5px;
+                }
+            }
+
+            .button-status-group {
+                display: flex;
+                height: 45px;
+
+                .common-button {
+                    margin-left: 5px;
+                }
+            }
+        }
+
+        .beforeAfter-link-group {
+
+            .beforeAfter-title {
+                span {
+                    color: rgb(143, 143, 143);
+                }
+                margin-bottom: 10px;
+            }
+
+            .beforeAfter-list {
+                margin: 10px 0;
+                display: flex;
+                flex-wrap: wrap;
+                
+                .beforeAfter-detail {
+                    display: flex;
+                    width: 50%;
+                    margin: 5px 0;
+
+                    .beforeAfter-link {
+                        display: block;
+                        width: 100%;
+
+                        .beforAfter-link-text {
+                            display: flex;
+                            justify-content: space-between;
+                            width: 90%;
+    
+                        }
+                    }   
+                }
+            }
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            margin-bottom: 5px;
+
+            a {
+                border: 1px solid rgb(238, 238, 238);
+                border-radius: .5rem;
+                margin-right: 10px;
+                padding: .7em .7em;
+                background-color: #3ae374;
+                margin-bottom: 10px;
+            }
+        }
+    }
+
+    .serve-wrapper {
+        .commentShare-wrapper {
+            width: 100%;
+            display: flex;
+
+            .comment-wrapper {
+                flex: 1;
+                .comment-form {
+                    border: 1px solid #dbdbdb;
+                    background-color: #ecf0f1;
+                    height: 210px;
+                    width: 100%;
+
+                    h3 {
+                        margin: 5px 8px;
+                        color: rgb(114, 114, 114);
+                    }
+
+                    textarea {
+                        display: block;
+                        margin: 0 auto;
+                        margin-bottom: 8px;
+                        resize: none;
+                        border: none;
+                        background-color: #ecf0f1;
+                        
+                    }
+
+                    .comment-input-group {
+                        display: flex;
+                        justify-content: space-between;
+
+                        .commnet-input {
+                            // border: 1px solid red;
+                            margin-left: 8px;
+                            
+                            span {
+                                margin-right: 5px;
+                            };
+
+                            input {
+                                border: 1px solid rgb(180, 180, 180);
+                            }
+                        }
+
+                        button {
+                            margin-right: 10px;
+                            border: 1px solid rgb(180, 180, 180);
+
+                            i {
+                                font-size: 1.5em;
+                            }
+                        }
+                    }
+                }
+            }
+            .share-wrapper {
+                flex: 1;
+
+                .share-group {
+                    margin-left: 10px;
+
+                    h3 {
+                        text-align: center;
+                        margin: 10px 0;
+                    }
+
+                    .share-link-list {
+                        display: flex;
+                        justify-content: center;
+                        flex-wrap: wrap;
+
+                        a {
+                            border: 1px solid rgb(238, 238, 238);
+                            border-radius: .5rem;
+                            margin-right: 10px;
+                            padding: .7em .7em;
+                            background-color: #3498db;
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+            }   
+        }
+        .comment-list-group {
+            margin-top: 15px;
+            
+            .comment-list {
+                // border: 1px solid red;
+
+                .comment-parent {
+                    font-size: 1.2em;
+                    font-weight: 400;
+                    
+                    i {
+                         margin-right: 8px;
+                    }
+                }
+
+                .comment-child {
+                    margin-left: 15px;
+
+                    i {
+                        margin-right: 8px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include mobile {
+    .postView-inner {
+        width: 95%;
+    }
+
+    .postView-wrapper {
+        .postView-main {
+            .beforeAfter-link-group {
+                .beforeAfter-list {
+                    flex-direction: column;
+            
+                    .beforeAfter-detail {
+                        width: 100%;
+
+                        .beforeAfter-link {
+                            .beforAfter-link-text {
+                                width: 100%;
+                            }
+                        }
+                    }     
+                }
+            }
+        }
+
+        .serve-wrapper {
+            .commentShare-wrapper {
+                display: flex;
+                flex-direction: column;
+
+                .comment-wrapper {
+                    .comment-form {
+                        textarea {
+                            width: 90%;
+                            overflow: hidden;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+
+    
+}

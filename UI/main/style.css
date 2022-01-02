@@ -127,7 +127,7 @@ nav {
 }
 
 /* SLIDER */
-.slider-fild {
+.slider-form {
   border: 1px solid black;
   width: 100%;
   height: 400px;
@@ -258,7 +258,7 @@ nav {
   }
   
   /* main */
-  .slider-fild {
+  .slider-form {
     margin-top: 74px;
   }
 
