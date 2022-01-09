@@ -1,4 +1,15 @@
 import React from "react";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(
+  async () => {
+    const { default: RQ } = await import("../components/editor");
+    return function comp({ forwardedRef, ...props }) {
+      return <RQ ref={forwardedRef} {...props} />;
+    };
+  },
+  { ssr: false }
+);
 
 const postModify = () => {
   return (
@@ -6,7 +17,9 @@ const postModify = () => {
       <div className="register-container">
         <div className="register-inner">
           <h3>재미있는 코딩 스토리~</h3>
-          <div className="aditerBox"></div>
+          <div className="aditerBox">
+            <Editor />
+          </div>
           <div className="button-group">
             <button className="common-button">글쓰기</button>
             <button className="common-button">취소</button>
@@ -36,7 +49,7 @@ const postModify = () => {
         }
 
         .register-container .register-inner .aditerBox {
-          border: 1px solid black;
+          border: 1px solid #ccc;
           width: 100%;
           height: 500px;
         }
