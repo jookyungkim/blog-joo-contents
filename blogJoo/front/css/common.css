@@ -1,0 +1,121 @@
+/* Google Web Font */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500&display=swap');
+
+/* Fontawesome 4.7 */
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+* {
+  font-family: 'Montserrat', sans-serif;
+  }
+  
+html {
+  scroll-behavior: smooth;
+}
+  
+body {
+  font-size: 15px;
+  margin: 0;
+  color: #222;
+  line-height: 1.5em;
+  font-weight: 300;
+  height: 100%;
+}
+  
+/* Reset CSS */
+a {
+  cursor: default;
+  text-decoration: none;
+  outline: none;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.3em;
+}
+
+input, button, textarea {
+    outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+  
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+hr {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  height: 1px;
+  background: rgb(202, 202, 202);
+}
+  
+/* Common CSS */
+.inner {
+  width: 1300px;
+  margin: auto;
+}
+
+.main-inner {
+  width: 900px;
+  margin: auto;
+}
+
+.common-button {
+  background-color: #FFFFFF;
+  border: 1px solid rgb(209,213,219);
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: #111827;
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1.15rem;
+  padding: .75rem 1rem;
+  text-align: center;
+  text-decoration: none #D1D5DB solid;
+  text-decoration-thickness: auto;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  display: block;
+}
+
+.common-button:hover {
+  background-color: rgb(249,250,251);
+}
+
+.common-button:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.common-button:focus-visible {
+  box-shadow: none;
+}
+
+@media (min-width: 335px) and (max-width: 757px) {
+ .inner {
+    width: 100%;
+ }
+ 
+ .main-inner {
+    width: 100%;
+ }
+}
