@@ -6,7 +6,8 @@ export const initialState = {
   logInError: null,
   logOutLoading: false, // 로그아웃 시도중
   logOutDone: false,
-  logOutError: false
+  logOutError: false,
+  me: null
 };
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
@@ -22,6 +23,11 @@ const dummyUser = data => ({});
 const reducer = (state = initialState, action) => {
   return produce(state, draft => {
     switch (action.type) {
+      case LOG_IN_REQUEST:
+        draft.logInLoading = true;
+        draft.logInDone = false;
+        draft.logInError = null;
+        break;
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
         draft.logInDone = true;

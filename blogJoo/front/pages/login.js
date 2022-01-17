@@ -1,17 +1,55 @@
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { LOG_IN_REQUEST } from "../reducers/user";
+import useInput from "../hooks/useInput";
+
 const login = () => {
+  const dispatch = useDispatch();
+  const { logInLoading, logInError } = useSelector(state => state.user);
+  const [email, onChangeEmail] = useInput();
+  const [password, onChangePassword] = useInput();
+
+  const onSubmitForm = useCallback(
+    e => {
+      e.preventDefault();
+      dispatch({
+        type: LOG_IN_REQUEST,
+        data: { email, password }
+      });
+    },
+    [email, password]
+  );
+
   return (
     <>
       <div className="login-container">
         <div className="login-inner">
           <div className="login-wrapper">
-            <form className="login-form">
+            <form className="login-form" onSubmit={onSubmitForm}>
               <div className="id-gorup">
-                <input type="email" placeholder="1234@naver.com" />
+                <input
+                  name="user-email"
+                  type="email"
+                  value={email || ""}
+                  onChange={onChangeEmail}
+                  placeholder="1234@naver.com"
+                  required
+                />
               </div>
               <div className="pwd-group">
-                <input type="password" placeholder="password" />
+                <input
+                  name="user-password"
+                  type="password"
+                  value={password || ""}
+                  onChange={onChangePassword}
+                  placeholder="password"
+                  required
+                />
               </div>
-              <button className="common-button">관리자</button>
+              <button className="common-button" type="submit">
+                관리자
+              </button>
             </form>
           </div>
         </div>

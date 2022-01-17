@@ -15,11 +15,12 @@ function logInAPI(data) {
 
 function* logIn(action) {
   try {
-    const result = yield call(logInAPI, action.data);
+    // const result = yield call(logInAPI, action.data);
+    delay(1000);
+
     yield put({
       type: LOG_IN_SUCCESS,
-      data: result.data
-      // data: result.data
+      data: action.data
     });
   } catch (err) {
     console.error(err);
