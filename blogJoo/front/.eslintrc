@@ -47,6 +47,8 @@
       "react/button-has-type": 0,
       "react/self-closing-comp": 1,
       "jsx-a11y/control-has-associated-label": 0,
-      "react/jsx-curly-brace-presence": 0
+      "react/jsx-curly-brace-presence": 0,
+      "default-param-last": 0,
+      "import/prefer-default-export": 0
   }
 }
