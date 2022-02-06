@@ -41,7 +41,7 @@ const SliderForm = props => {
 
         @media (min-width: 335px) and (max-width: 757px) {
           .slider-form {
-            margin-top: 74px;
+            /* margin-top: 74px; */
             width: 100%;
             border: none;
             height: 450px;

@@ -7,6 +7,9 @@ export const initialState = {
   logOutLoading: false, // 로그아웃 시도중
   logOutDone: false,
   logOutError: false,
+  loadMyInfoLoading: false, // 로그아웃 시도중
+  loadMyInfoDone: false,
+  loadMyInfoError: false,
   me: null
 };
 
@@ -17,6 +20,10 @@ export const LOG_IN_FAILURE = "LOG_IN_FAILURE";
 export const LOG_OUT_REQUEST = "LOG_OUT_REQUEST";
 export const LOG_OUT_SUCCESS = "LOG_OUT_SUCCESS";
 export const LOG_OUT_FAILURE = "LOG_OUT_FAILURE";
+
+export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
+export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
+export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
 
 const dummyUser = data => ({});
 
@@ -52,6 +59,21 @@ const reducer = (state = initialState, action) => {
       case LOG_OUT_FAILURE:
         draft.logOutLoading = false;
         draft.logOutError = action.error;
+        break;
+      case LOAD_MY_INFO_REQUEST:
+        draft.loadMyInfoLoading = true;
+        draft.loadMyInfoDone = false;
+        draft.loadMyInfoError = null;
+        break;
+      case LOAD_MY_INFO_SUCCESS:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoDone = true;
+        draft.loadMyInfoError = false;
+        draft.me = action.data;
+        break;
+      case LOAD_MY_INFO_FAILURE:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoError = action.error;
         break;
       default:
         break;
