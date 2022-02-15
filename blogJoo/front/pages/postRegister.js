@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 
 const Editor = dynamic(
@@ -12,18 +12,34 @@ const Editor = dynamic(
 );
 
 const postRegister = () => {
+  const [text, setText] = useState(null);
+  const handleChange = useCallback(
+    value => {
+      setText(value);
+    },
+    [text]
+  );
+
+  const onSubmitForm = useCallback(e => {
+    e.preventDefault();
+  });
+
   return (
     <>
       <div className="register-container">
         <div className="register-inner">
           <h3>재미있는 코딩 스토리~</h3>
-          <div className="aditerBox">
-            <Editor />
-          </div>
-          <div className="button-group">
-            <button className="common-button">글쓰기</button>
-            <button className="common-button">취소</button>
-          </div>
+          <form onSubmit={onSubmitForm}>
+            <div className="aditerBox">
+              <Editor text={text} handleChange={handleChange} />
+            </div>
+            <div className="button-group">
+              <button className="common-button" type="submit">
+                글쓰기
+              </button>
+              <button className="common-button">취소</button>
+            </div>
+          </form>
         </div>
       </div>
       <style jsx>{`
@@ -98,10 +114,7 @@ const postRegister = () => {
           .register-container .register-inner .button-group button {
             margin: 5px 0;
           }
-          .register-container
-            .register-inner
-            .button-group
-            button:nth-child(1) {
+          .register-container .register-inner .button-group button:nth-child(1) {
             margin-right: 0;
           }
         }

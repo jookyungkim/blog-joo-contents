@@ -2,11 +2,12 @@ import React from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import AppLayout from "../../components/AppLayout";
-import PostForm from "../../components/PostForm";
+import Posts from "../../components/Posts";
 
 const Post = props => {
   const router = useRouter();
   const { name } = router.query;
+
   return (
     <>
       <AppLayout>
@@ -15,7 +16,7 @@ const Post = props => {
         </Head>
         <div className="main-inner">
           <h2 className="title-name">{name}</h2>
-          <PostForm />
+          <Posts />
         </div>
       </AppLayout>
 

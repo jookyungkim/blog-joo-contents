@@ -1,14 +1,6 @@
 import axios from "axios";
 
-import {
-  delay,
-  put,
-  takeLatest,
-  all,
-  call,
-  fork,
-  throttle
-} from "redux-saga/effects";
+import { delay, put, takeLatest, all, call, fork, throttle } from "redux-saga/effects";
 
 import {
   LOAD_POSTS_REQUEST,
@@ -22,7 +14,10 @@ import {
   ADD_POST_FAILURE,
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
-  REMOVE_POST_FAILURE
+  REMOVE_POST_FAILURE,
+  UPLOAD_IMAGES_REQUEST,
+  UPLOAD_IMAGES_SUCCESS,
+  UPLOAD_IMAGES_FAILURE
 } from "../reducers/post";
 
 function loadPostsAPI(lastId) {
@@ -32,6 +27,7 @@ function loadPostsAPI(lastId) {
 function* loadPosts(action) {
   try {
     const result = yield call(loadPostsAPI, action.lastId);
+
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data
@@ -105,6 +101,27 @@ function* removePost(action) {
     });
   }
 }
+
+function uploadImagesAPI(data) {
+  return axios.delete("/post/images", data); // formData
+}
+
+function* uploadImages(action) {
+  try {
+    const result = yield call(uploadImagesAPI, action.data);
+    yield put({
+      type: UPLOAD_IMAGES_SUCCESS,
+      data: result.data
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: UPLOAD_IMAGES_FAILURE,
+      error: err.response.data
+    });
+  }
+}
+
 function* watchLoadPosts() {
   yield throttle(10000, LOAD_POSTS_REQUEST, loadPosts);
 }
@@ -121,11 +138,16 @@ function* watchRemovePost() {
   yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
 
+function* watchUploadImages() {
+  yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
     fork(watchLoadPost),
     fork(watchAddPost),
-    fork(watchRemovePost)
+    fork(watchRemovePost),
+    fork(watchUploadImages)
   ]);
 }

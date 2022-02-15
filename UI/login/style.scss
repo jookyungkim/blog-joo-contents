@@ -43,3 +43,16 @@
     }
     
 }
+@include mobile {
+    .login-container {
+
+        .login-inner {
+            width: 100%;
+            height: 100%;
+        }
+
+        .login-wrapper {
+            border: 0px;
+        }
+    }    
+}

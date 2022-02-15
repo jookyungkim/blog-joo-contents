@@ -1,4 +1,5 @@
 const passport = require("passport");
+const { User } = require("../models");
 const local = require("./local");
 
 module.exports = () => {
@@ -11,7 +12,8 @@ module.exports = () => {
   // 로그인 완려되고나서 매번 실행
   passport.deserializeUser(async (id, done) => {
     try {
-      done(null, { id });
+      const user = await User.findOne({ where: { id } });
+      done(null, user);
     } catch (error) {
       console.error(error);
       done(error);

@@ -12,7 +12,7 @@ module.exports = class Tag extends Model {
       },
       {
         modelName: "Tag",
-        tableName: "Tags",
+        tableName: "tags",
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
         sequelize,

@@ -12,7 +12,7 @@ module.exports = class Search extends Model {
       },
       {
         modelName: "Search",
-        tableName: "Searchs",
+        tableName: "searchs",
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
         sequelize,

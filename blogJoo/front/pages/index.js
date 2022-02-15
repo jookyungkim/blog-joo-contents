@@ -3,17 +3,18 @@ import axios from "axios";
 import { END } from "redux-saga";
 
 import AppLayout from "../components/AppLayout";
-import PostForm from "../components/PostForm";
+import Posts from "../components/Posts";
 import SliderForm from "../components/sliderForm";
 import wrapper from "../store/configureStore";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import { LOAD_POSTS_REQUEST } from "../reducers/post";
 
 function index() {
   return (
     <AppLayout>
       <div className="main-inner">
         <SliderForm />
-        <PostForm />
+        <Posts />
       </div>
     </AppLayout>
   );
@@ -32,6 +33,10 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
 
   store.dispatch({
     type: LOAD_MY_INFO_REQUEST
+  });
+
+  store.dispatch({
+    type: LOAD_POSTS_REQUEST
   });
 
   store.dispatch(END);

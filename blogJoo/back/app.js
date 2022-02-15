@@ -10,6 +10,7 @@ const hpp = require("hpp");
 const helmet = require("helmet");
 
 const postRouter = require("./routes/post");
+const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 
 const db = require("./models");
@@ -37,6 +38,8 @@ if (process.env.NODE_ENV === "production") {
   );
 }
 
+app.use("/", express.static(path.join(__dirname, "uploads")));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -63,6 +66,7 @@ app.get("/", (req, res) => {
 
 app.use("/user", userRouter);
 app.use("/post", postRouter);
+app.use("/posts", postsRouter);
 
 // 에러 처리 미들웨어 이다.
 // 여기에 소스가 없으면 내부적으로 이쪽에 생성된다.

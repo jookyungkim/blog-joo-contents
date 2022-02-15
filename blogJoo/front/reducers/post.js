@@ -1,18 +1,42 @@
+import { faker } from "@faker-js/faker";
+import shortId from "shortid";
 import produce from "../utill/produce";
 
 export const initialState = {
-  LoadPostsLoading: false,
-  LoadPostsDone: false,
-  LoadPostsError: null,
-  LoadPostLoading: false,
-  LoadPostDone: false,
-  LoadPostError: null,
+  imagePath: [],
+  mainPosts: [],
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
+  loadPostLoading: false,
+  loadPostDone: false,
+  loadPostError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
   removePostLoading: false,
   removePostDone: false,
-  removePostError: null
+  removePostError: null,
+  hasMorePosts: true,
+  singlePost: null,
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null
+};
+
+export const generateDummyPost = number => {
+  return Array(number)
+    .fill()
+    .map(() => ({
+      id: shortId.generate(),
+      title: "input 태그 속성들",
+      content: faker.lorem.paragraph(),
+      Images: [
+        {
+          src: faker.image.image()
+        }
+      ]
+    }));
 };
 
 export const LOAD_HASHTAG_POSTS_REQUEST = "LOAD_HASHTAG_POSTS_REQUEST";
@@ -35,14 +59,24 @@ export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
 export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
 export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
 
+export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGES_REQUEST";
+export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGES_SUCCESS";
+export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";
+
 const dummyUser = data => ({});
 
 const reducer = (state = initialState, action) => {
   return produce(state, draft => {
     switch (action.type) {
+      case LOAD_POSTS_REQUEST:
+        draft.loadPostsLoading = true;
+        draft.loadPostsDone = false;
+        draft.loadPostsError = null;
+        break;
       case LOAD_POSTS_SUCCESS:
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
+        draft.mainPosts = draft.mainPosts.concat(generateDummyPost(10));
         break;
       case LOAD_POSTS_FAILURE:
         draft.loadPostsLoading = false;
@@ -88,6 +122,20 @@ const reducer = (state = initialState, action) => {
       case REMOVE_POST_FAILURE:
         draft.removePostLoading = false;
         draft.removePostError = action.error;
+        break;
+      case UPLOAD_IMAGES_REQUEST:
+        draft.uploadImagesLoading = true;
+        draft.uploadImagesDone = false;
+        draft.uploadImagesError = null;
+        break;
+      case UPLOAD_IMAGES_SUCCESS:
+        draft.imagePaths = draft.imagePaths.concat(action.data);
+        draft.uploadImagesLoading = false;
+        draft.uploadImagesDone = true;
+        break;
+      case UPLOAD_IMAGES_FAILURE:
+        draft.uploadImagesLoading = false;
+        draft.uploadImagesError = action.error;
         break;
       default:
         break;

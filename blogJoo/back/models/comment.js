@@ -20,7 +20,7 @@ module.exports = class Comment extends Model {
       },
       {
         modelName: "Comment",
-        tableName: "Comments",
+        tableName: "comments",
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci", // 이모티콘 한글저장
         sequelize,

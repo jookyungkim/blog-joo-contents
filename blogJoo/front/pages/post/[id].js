@@ -1,6 +1,10 @@
 import React from "react";
+import { useRouter } from "next/router";
 
 const postView = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
   return (
     <>
       <div className="postView-container">
@@ -33,10 +37,7 @@ const postView = () => {
                     <a href="#none" className="beforeAfter-link">
                       <div className="beforAfter-link-text">
                         <span>input 태그의 type 속성 종류와 예제</span>
-                        <i
-                          className="fa fa-long-arrow-right"
-                          aria-hidden="true"
-                        />
+                        <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       </div>
                     </a>
                   </div>
@@ -44,10 +45,7 @@ const postView = () => {
                     <a href="#none" className="beforeAfter-link">
                       <div className="beforAfter-link-text">
                         <span>input 태그의 type 속성 종류와 예제</span>
-                        <i
-                          className="fa fa-long-arrow-right"
-                          aria-hidden="true"
-                        />
+                        <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       </div>
                     </a>
                   </div>
@@ -55,10 +53,7 @@ const postView = () => {
                     <a href="#none" className="beforeAfter-link">
                       <div className="beforAfter-link-text">
                         <span>input 태그의 type 속성 종류와 예제</span>
-                        <i
-                          className="fa fa-long-arrow-right"
-                          aria-hidden="true"
-                        />
+                        <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       </div>
                     </a>
                   </div>
@@ -66,10 +61,7 @@ const postView = () => {
                     <a href="#none" className="beforeAfter-link">
                       <div className="beforAfter-link-text">
                         <span>input 태그의 type 속성 종류와 예제</span>
-                        <i
-                          className="fa fa-long-arrow-right"
-                          aria-hidden="true"
-                        />
+                        <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       </div>
                     </a>
                   </div>
@@ -89,23 +81,14 @@ const postView = () => {
                 <div className="comment-wrapper">
                   <div className="comment-form">
                     <h3>댓글</h3>
-                    <textarea
-                      name="comment"
-                      id=""
-                      cols="55"
-                      rows="8"
-                      placeholder="입력하세요"
-                    ></textarea>
+                    <textarea name="comment" id="" cols="55" rows="8" placeholder="입력하세요"></textarea>
                     <div className="comment-input-group">
                       <div className="commnet-input">
                         <span>이름</span>
                         <input type="text" />
                       </div>
                       <button>
-                        <i
-                          className="fa fa-arrow-circle-down"
-                          aria-hidden="true"
-                        />
+                        <i className="fa fa-arrow-circle-down" aria-hidden="true" />
                       </button>
                     </div>
                   </div>
@@ -130,25 +113,16 @@ const postView = () => {
               <div className="comment-list-group">
                 <div className="comment-list">
                   <div className="comment-parent">
-                    <i
-                      className="fa fa-chevron-circle-right"
-                      aria-hidden="true"
-                    />
+                    <i className="fa fa-chevron-circle-right" aria-hidden="true" />
                     <span>html이 브라우저로 돌아가는거 보면 신기해요</span>
                   </div>
                   <div className="comment-child">
-                    <i
-                      className="fa fa-chevron-circle-left"
-                      aria-hidden="true"
-                    />
+                    <i className="fa fa-chevron-circle-left" aria-hidden="true" />
                     <span>[쿠카]</span>
                     <span>그쵸ㅎㅎ 저도 공부하면서 너무 신기했어요!</span>
                   </div>
                   <div className="comment-child">
-                    <i
-                      className="fa fa-chevron-circle-left"
-                      aria-hidden="true"
-                    />
+                    <i className="fa fa-chevron-circle-left" aria-hidden="true" />
                     <span>[조로]</span>
                     <span> 많은것을 알게되서 기뻐요 ㅎㅎ</span>
                   </div>
@@ -202,11 +176,7 @@ const postView = () => {
           height: 45px;
         }
 
-        .postView-wrapper
-          .postView-main
-          .button-group
-          .button-like-group
-          .common-button {
+        .postView-wrapper .postView-main .button-group .button-like-group .common-button {
           margin-right: 5px;
         }
 
@@ -217,33 +187,19 @@ const postView = () => {
           height: 45px;
         }
 
-        .postView-wrapper
-          .postView-main
-          .button-group
-          .button-status-group
-          .common-button {
+        .postView-wrapper .postView-main .button-group .button-status-group .common-button {
           margin-left: 5px;
         }
 
-        .postView-wrapper
-          .postView-main
-          .beforeAfter-link-group
-          .beforeAfter-title {
+        .postView-wrapper .postView-main .beforeAfter-link-group .beforeAfter-title {
           margin-bottom: 10px;
         }
 
-        .postView-wrapper
-          .postView-main
-          .beforeAfter-link-group
-          .beforeAfter-title
-          span {
+        .postView-wrapper .postView-main .beforeAfter-link-group .beforeAfter-title span {
           color: #8f8f8f;
         }
 
-        .postView-wrapper
-          .postView-main
-          .beforeAfter-link-group
-          .beforeAfter-list {
+        .postView-wrapper .postView-main .beforeAfter-link-group .beforeAfter-list {
           margin: 10px 0;
           display: -webkit-box;
           display: -ms-flexbox;
@@ -252,11 +208,7 @@ const postView = () => {
           flex-wrap: wrap;
         }
 
-        .postView-wrapper
-          .postView-main
-          .beforeAfter-link-group
-          .beforeAfter-list
-          .beforeAfter-detail {
+        .postView-wrapper .postView-main .beforeAfter-link-group .beforeAfter-list .beforeAfter-detail {
           display: -webkit-box;
           display: -ms-flexbox;
           display: flex;
@@ -316,42 +268,25 @@ const postView = () => {
           display: flex;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .comment-wrapper {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper {
           -webkit-box-flex: 1;
           -ms-flex: 1;
           flex: 1;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .comment-wrapper
-          .comment-form {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper .comment-form {
           border: 1px solid #dbdbdb;
           background-color: #ecf0f1;
           height: 210px;
           width: 100%;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .comment-wrapper
-          .comment-form
-          h3 {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper .comment-form h3 {
           margin: 5px 8px;
           color: #727272;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .comment-wrapper
-          .comment-form
-          textarea {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper .comment-form textarea {
           display: block;
           margin: 0 auto;
           margin-bottom: 8px;
@@ -360,12 +295,7 @@ const postView = () => {
           background-color: #ecf0f1;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .comment-wrapper
-          .comment-form
-          .comment-input-group {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper .comment-form .comment-input-group {
           display: -webkit-box;
           display: -ms-flexbox;
           display: flex;
@@ -434,30 +364,16 @@ const postView = () => {
           flex: 1;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .share-wrapper
-          .share-group {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .share-wrapper .share-group {
           margin-left: 10px;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .share-wrapper
-          .share-group
-          h3 {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .share-wrapper .share-group h3 {
           text-align: center;
           margin: 10px 0;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .share-wrapper
-          .share-group
-          .share-link-list {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .share-wrapper .share-group .share-link-list {
           display: -webkit-box;
           display: -ms-flexbox;
           display: flex;
@@ -468,13 +384,7 @@ const postView = () => {
           flex-wrap: wrap;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .commentShare-wrapper
-          .share-wrapper
-          .share-group
-          .share-link-list
-          a {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .share-wrapper .share-group .share-link-list a {
           border: 1px solid #eeeeee;
           border-radius: 0.5rem;
           margin-right: 10px;
@@ -487,38 +397,20 @@ const postView = () => {
           margin-top: 15px;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .comment-list-group
-          .comment-list
-          .comment-parent {
+        .postView-wrapper .serve-wrapper .comment-list-group .comment-list .comment-parent {
           font-size: 1.2em;
           font-weight: 400;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .comment-list-group
-          .comment-list
-          .comment-parent
-          i {
+        .postView-wrapper .serve-wrapper .comment-list-group .comment-list .comment-parent i {
           margin-right: 8px;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .comment-list-group
-          .comment-list
-          .comment-child {
+        .postView-wrapper .serve-wrapper .comment-list-group .comment-list .comment-child {
           margin-left: 15px;
         }
 
-        .postView-wrapper
-          .serve-wrapper
-          .comment-list-group
-          .comment-list
-          .comment-child
-          i {
+        .postView-wrapper .serve-wrapper .comment-list-group .comment-list .comment-child i {
           margin-right: 8px;
         }
 
@@ -530,20 +422,13 @@ const postView = () => {
           .postView-inner {
             width: 95%;
           }
-          .postView-wrapper
-            .postView-main
-            .beforeAfter-link-group
-            .beforeAfter-list {
+          .postView-wrapper .postView-main .beforeAfter-link-group .beforeAfter-list {
             -webkit-box-orient: vertical;
             -webkit-box-direction: normal;
             -ms-flex-direction: column;
             flex-direction: column;
           }
-          .postView-wrapper
-            .postView-main
-            .beforeAfter-link-group
-            .beforeAfter-list
-            .beforeAfter-detail {
+          .postView-wrapper .postView-main .beforeAfter-link-group .beforeAfter-list .beforeAfter-detail {
             width: 100%;
           }
           .postView-wrapper
@@ -564,12 +449,7 @@ const postView = () => {
             -ms-flex-direction: column;
             flex-direction: column;
           }
-          .postView-wrapper
-            .serve-wrapper
-            .commentShare-wrapper
-            .comment-wrapper
-            .comment-form
-            textarea {
+          .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper .comment-form textarea {
             width: 90%;
             overflow: hidden;
           }
