@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const user = require("./user");
 const post = require("./post");
 const search = require("./search");
-const tag = require("./tag");
+const hashtag = require("./hashtag");
 const comment = require("./comment");
 const Image = require("./image");
 
@@ -20,7 +20,7 @@ const sequelize = new Sequelize(
 db.User = user;
 db.Post = post;
 db.Search = search;
-db.Tag = tag;
+db.Hashtag = hashtag;
 db.Comment = comment;
 db.Image = Image;
 

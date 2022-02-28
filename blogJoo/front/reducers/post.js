@@ -3,8 +3,9 @@ import shortId from "shortid";
 import produce from "../utill/produce";
 
 export const initialState = {
-  imagePath: [],
+  imagePaths: [],
   mainPosts: [],
+  imagePath: null,
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
@@ -19,9 +20,9 @@ export const initialState = {
   removePostError: null,
   hasMorePosts: true,
   singlePost: null,
-  uploadImagesLoading: false,
-  uploadImagesDone: false,
-  uploadImagesError: null
+  uploadImageLoading: false,
+  uploadImageDone: false,
+  uploadImageError: null
 };
 
 export const generateDummyPost = number => {
@@ -59,9 +60,9 @@ export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
 export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
 export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
 
-export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGES_REQUEST";
-export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGES_SUCCESS";
-export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";
+export const UPLOAD_IMAGE_REQUEST = "UPLOAD_IMAGE_REQUEST";
+export const UPLOAD_IMAGE_SUCCESS = "UPLOAD_IMAGE_SUCCESS";
+export const UPLOAD_IMAGE_FAILURE = "UPLOAD_IMAGE_FAILURE";
 
 const dummyUser = data => ({});
 
@@ -104,7 +105,6 @@ const reducer = (state = initialState, action) => {
       case ADD_POST_SUCCESS:
         draft.addPostLoading = false;
         draft.addPostDone = true;
-        draft.imagePaths = [];
         break;
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
@@ -123,19 +123,19 @@ const reducer = (state = initialState, action) => {
         draft.removePostLoading = false;
         draft.removePostError = action.error;
         break;
-      case UPLOAD_IMAGES_REQUEST:
-        draft.uploadImagesLoading = true;
-        draft.uploadImagesDone = false;
-        draft.uploadImagesError = null;
+      case UPLOAD_IMAGE_REQUEST:
+        draft.uploadImageLoading = true;
+        draft.uploadImageDone = false;
+        draft.uploadImageError = null;
         break;
-      case UPLOAD_IMAGES_SUCCESS:
-        draft.imagePaths = draft.imagePaths.concat(action.data);
-        draft.uploadImagesLoading = false;
-        draft.uploadImagesDone = true;
+      case UPLOAD_IMAGE_SUCCESS:
+        draft.imagePath = action.data;
+        draft.uploadImageLoading = false;
+        draft.uploadImageDone = true;
         break;
-      case UPLOAD_IMAGES_FAILURE:
-        draft.uploadImagesLoading = false;
-        draft.uploadImagesError = action.error;
+      case UPLOAD_IMAGE_FAILURE:
+        draft.uploadImageLoading = false;
+        draft.uploadImageError = action.error;
         break;
       default:
         break;

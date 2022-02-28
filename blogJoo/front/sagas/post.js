@@ -15,9 +15,9 @@ import {
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
   REMOVE_POST_FAILURE,
-  UPLOAD_IMAGES_REQUEST,
-  UPLOAD_IMAGES_SUCCESS,
-  UPLOAD_IMAGES_FAILURE
+  UPLOAD_IMAGE_REQUEST,
+  UPLOAD_IMAGE_SUCCESS,
+  UPLOAD_IMAGE_FAILURE
 } from "../reducers/post";
 
 function loadPostsAPI(lastId) {
@@ -102,21 +102,23 @@ function* removePost(action) {
   }
 }
 
-function uploadImagesAPI(data) {
-  return axios.delete("/post/images", data); // formData
+function uploadImageAPI(data) {
+  return axios.post("/post/image", data); // formData
 }
 
-function* uploadImages(action) {
+function* uploadImage(action) {
+  // const result = yield call(uploadImagesAPI, action.data);
+  // console.log("result ", result);
   try {
-    const result = yield call(uploadImagesAPI, action.data);
+    const result = yield call(uploadImageAPI, action.data);
     yield put({
-      type: UPLOAD_IMAGES_SUCCESS,
+      type: UPLOAD_IMAGE_SUCCESS,
       data: result.data
     });
   } catch (err) {
     console.error(err);
     yield put({
-      type: UPLOAD_IMAGES_FAILURE,
+      type: UPLOAD_IMAGE_FAILURE,
       error: err.response.data
     });
   }
@@ -138,8 +140,8 @@ function* watchRemovePost() {
   yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
 
-function* watchUploadImages() {
-  yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
+function* watchUploadImage() {
+  yield takeLatest(UPLOAD_IMAGE_REQUEST, uploadImage);
 }
 
 export default function* postSaga() {
@@ -148,6 +150,6 @@ export default function* postSaga() {
     fork(watchLoadPost),
     fork(watchAddPost),
     fork(watchRemovePost),
-    fork(watchUploadImages)
+    fork(watchUploadImage)
   ]);
 }

@@ -6,17 +6,20 @@ module.exports = class Tag extends Model {
     return super.init(
       {
         keyword: {
-          type: DataTypes.TEXT,
+          type: DataTypes.STRING(20),
           allowNull: false,
         },
       },
       {
-        modelName: "Tag",
+        modelName: "Hashtag",
         tableName: "tags",
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
         sequelize,
       }
     );
+  }
+  static associzte(db) {
+    db.Hashtag.belongsToMany(db.Post, { through: "postHashtag" });
   }
 };

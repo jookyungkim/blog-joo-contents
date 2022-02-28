@@ -1,31 +1,38 @@
-import React, { useRef, useCallback, useMemo } from "react";
-import dynamic from "next/dynamic";
-import ReactQuill from "react-quill";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useRef, useMemo } from "react";
+import ReactQuill, { Quill } from "react-quill";
 
-import "react-quill/dist/quill.snow.css";
+import styled from "styled-components";
 
 import { backUrl } from "../../config/config";
-import { UPLOAD_IMAGES_REQUEST } from "../../reducers/post";
 import EditorToolbar, { formats } from "./EditorToolbar";
+// or const { useQuill } = require('react-quilljs');
+
+import "quill/dist/quill.snow.css"; // Add css for snow theme
+// or import 'quill/dist/quill.bubble.css'; // Add css for bubble theme
+
+// Add sizes to whitelist and register them
+const Size = Quill.import("formats/size");
+Size.whitelist = ["extra-small", "small", "medium", "large"];
+Quill.register(Size, true);
+
+// Add fonts to whitelist and register them
+const Font = Quill.import("formats/font");
+Font.whitelist = ["arial", "comic-sans", "courier-new", "georgia", "helvetica", "lucida"];
+Quill.register(Font, true);
 
 const ReactQuillCustom = styled(ReactQuill)`
   .ql-container.ql-snow {
-    border: none;
+    /* border: none; */
+    height: 100%;
+    height: 430px;
   }
 `;
 
-const undoChange = () => {
-  //editorRef.history.undo();
-};
-
-const redoChange = () => {
-  //editorRef.history.redo();
-};
-
 const Editor = ({ text, handleChange }) => {
   const editorRef = useRef(null);
+  //const dispatch = useDispatch();
+  //const { uploadImageDone, imagePath } = useSelector(state => state.post);
+
   const insertToEditor = url => {
     // 현재 커서 위치에 이미지를 삽입하고 커서 위치를 +1 하기
     const range = editorRef.current.getEditorSelection();
@@ -34,19 +41,23 @@ const Editor = ({ text, handleChange }) => {
   };
 
   const saveToServer = file => {
-    const fd = new FormData();
-    fd.append("image", file); // back 서버에서 req.body.image
+    const imageFormData = new FormData();
+    imageFormData.append("image", file); // back 서버에서 req.body.image
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", `${backUrl}/post/images`, true);
     xhr.onload = () => {
-      console.log("status", xhr);
       if (xhr.status === 201) {
         const url = JSON.parse(xhr.responseText);
-        insertToEditor(url[0]);
+        insertToEditor(url);
       }
     };
-    xhr.send(fd);
+    xhr.send(imageFormData);
+
+    // dispatch({
+    //   type: UPLOAD_IMAGE_REQUEST,
+    //   data: imageFormData
+    // });
   };
 
   const imageHandler = () => {
@@ -70,8 +81,6 @@ const Editor = ({ text, handleChange }) => {
       toolbar: {
         container: "#toolbar",
         handlers: {
-          undo: undoChange,
-          redo: redoChange,
           image: imageHandler
         }
       },
@@ -82,6 +91,13 @@ const Editor = ({ text, handleChange }) => {
       }
     };
   }, []);
+
+  // useEffect(() => {
+  //   if (uploadImageDone) {
+  //     console.log("imagePath", imagePath);
+  //     insertToEditor(imagePath);
+  //   }
+  // }, [imagePath, uploadImageDone]);
 
   return (
     <>
@@ -98,11 +114,7 @@ const Editor = ({ text, handleChange }) => {
         />
       </div>
 
-      <style jsx>{`
-        .ql-container.ql-snow {
-          border: none;
-        }
-      `}</style>
+      <style jsx>{``}</style>
     </>
   );
 };

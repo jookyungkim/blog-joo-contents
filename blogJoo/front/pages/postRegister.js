@@ -1,6 +1,12 @@
 import React, { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 
+import { useDispatch, useSelector } from "react-redux";
+import { ADD_POST_REQUEST } from "../reducers/post";
+import userInput from "../hooks/useInput";
+
+// import Editor from "../components/editor";
+
 const Editor = dynamic(
   async () => {
     const { default: RQ } = await import("../components/editor");
@@ -12,7 +18,10 @@ const Editor = dynamic(
 );
 
 const postRegister = () => {
+  const dispatch = useDispatch();
   const [text, setText] = useState(null);
+  const [title, onChangeTitle] = userInput(null);
+
   const handleChange = useCallback(
     value => {
       setText(value);
@@ -20,9 +29,17 @@ const postRegister = () => {
     [text]
   );
 
-  const onSubmitForm = useCallback(e => {
-    e.preventDefault();
-  });
+  const onSubmitForm = useCallback(
+    e => {
+      e.preventDefault();
+
+      dispatch({
+        type: ADD_POST_REQUEST,
+        data: { content: text, title }
+      });
+    },
+    [text, title]
+  );
 
   return (
     <>
@@ -30,6 +47,7 @@ const postRegister = () => {
         <div className="register-inner">
           <h3>재미있는 코딩 스토리~</h3>
           <form onSubmit={onSubmitForm}>
+            <input type="text" className="register-title" value={title || ""} onChange={onChangeTitle} />
             <div className="aditerBox">
               <Editor text={text} handleChange={handleChange} />
             </div>
@@ -55,8 +73,9 @@ const postRegister = () => {
 
         .register-container .register-inner {
           margin: auto;
-          width: 600px;
+          width: 900px;
           height: 600px;
+          /* border: 1px solid red; */
         }
 
         .register-container .register-inner h3 {
@@ -64,8 +83,17 @@ const postRegister = () => {
           margin-bottom: 15px;
         }
 
-        .register-container .register-inner .aditerBox {
+        .register-container .register-inner .register-title {
+          width: 100%;
+          height: 50px;
           border: 1px solid #ccc;
+          margin-bottom: 10px;
+          padding: 0px;
+          box-sizing: border-box;
+        }
+
+        .register-container .register-inner .aditerBox {
+          /* border: 1px solid #ccc; */
           width: 100%;
           height: 500px;
         }
@@ -102,6 +130,11 @@ const postRegister = () => {
           .register-container .register-inner h3 {
             margin-top: 15px;
           }
+
+          .register-container .register-inner .register-title {
+            /* width: 100%; */
+          }
+
           .register-container .register-inner .aditerBox {
             height: 70%;
           }

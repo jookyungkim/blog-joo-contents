@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const PostCard = ({ post }) => {
-  // console.log(post);
+  //console.log(post);
 
   return (
     <>

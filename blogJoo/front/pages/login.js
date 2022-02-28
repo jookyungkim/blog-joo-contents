@@ -13,6 +13,7 @@ const login = () => {
   const [email, onChangeEmail] = useInput();
   const [password, onChangePassword] = useInput();
 
+  console.log(email);
   const onSubmitForm = useCallback(
     e => {
       e.preventDefault();

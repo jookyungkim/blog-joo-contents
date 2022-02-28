@@ -1,34 +1,36 @@
 import React from "react";
-import { Quill } from "react-quill";
 
-// const editorRef = useRef(null);
 // Custom Undo button icon component for Quill editor. You can import it directly
 // from 'quill/assets/icons/undo.svg' but I found that a number of loaders do not
 // handle them correctly
+/*
 const CustomUndo = () => (
   <svg viewBox="0 0 18 18">
     <polygon className="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10" />
     <path className="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9" />
   </svg>
 );
+*/
 
 // Redo button icon component for Quill editor
+/*
 const CustomRedo = () => (
   <svg viewBox="0 0 18 18">
     <polygon className="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10" />
     <path className="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5" />
   </svg>
 );
+*/
 
 // Add sizes to whitelist and register them
-const Size = Quill.import("formats/size");
-Size.whitelist = ["extra-small", "small", "medium", "large"];
-Quill.register(Size, true);
+// const Size = Quill.import("formats/size");
+// Size.whitelist = ["extra-small", "small", "medium", "large"];
+// Quill.register(Size, true);
 
-// Add fonts to whitelist and register them
-const Font = Quill.import("formats/font");
-Font.whitelist = ["arial", "comic-sans", "courier-new", "georgia", "helvetica", "lucida"];
-Quill.register(Font, true);
+// // Add fonts to whitelist and register them
+// const Font = Quill.import("formats/font");
+// Font.whitelist = ["arial", "comic-sans", "courier-new", "georgia", "helvetica", "lucida"];
+// Quill.register(Font, true);
 
 // Formats objects for setting up the Quill editor
 export const formats = [
@@ -102,21 +104,21 @@ export const QuillToolbar = () => (
     <span className="ql-formats">
       <button className="ql-link" />
       <button className="ql-image" />
-      <button className="ql-video" />
+      {/* <button className="ql-video" /> */}
     </span>
     <span className="ql-formats">
-      <button className="ql-formula" />
+      {/* <button className="ql-formula" /> */}
       <button className="ql-code-block" />
-      <button className="ql-clean" />
+      {/* <button className="ql-cleanㅋ" /> */}
     </span>
-    <span className="ql-formats">
+    {/* <span className="ql-formats">
       <button className="ql-undo">
         <CustomUndo />
       </button>
       <button className="ql-redo">
         <CustomRedo />
       </button>
-    </span>
+    </span> */}
   </div>
 );
 

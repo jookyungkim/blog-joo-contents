@@ -6,16 +6,12 @@ module.exports = class Post extends Model {
     return super.init(
       {
         title: {
-          type: DataTypes.TEXT,
+          type: DataTypes.STRING(50),
           allowNull: false,
         },
         content: {
           type: DataTypes.TEXT,
-          allowNull: true,
-        },
-        keyword: {
-          type: DataTypes.TEXT,
-          allowNull: true,
+          allowNull: false,
         },
       },
       {
@@ -31,5 +27,6 @@ module.exports = class Post extends Model {
   static associate(db) {
     db.Post.belongsTo(db.User);
     db.Post.hasMany(db.Comment);
+    db.Post.belongsToMany(db.Hashtag, { through: "postHashtag" });
   }
 };
