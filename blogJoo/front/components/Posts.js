@@ -1,38 +1,36 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { LOAD_POSTS_REQUEST } from "../reducers/post";
+import React from "react";
 
 import PostCard from "./PostCard";
 
-const PostForm = () => {
-  const dispatch = useDispatch();
-  const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(state => state.post);
+const PostForm = props => {
+  const { mainPosts } = props;
 
-  useEffect(
-    () => {
-      function onScroll() {
-        // console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
+  //const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(state => state.post);
+  // useEffect(
+  //   () => {
+  //     function onScroll() {
+  //       // console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
 
-        if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-          if (hasMorePosts && !loadPostsLoading) {
-            const lastId = mainPosts[mainPosts.length - 1]?.id;
-            console.log("화면 로딩");
-            dispatch({
-              type: LOAD_POSTS_REQUEST,
-              lastId
-            });
-          }
-        }
-      }
+  //       if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+  //         if (hasMorePosts && !loadPostsLoading) {
+  //           const lastId = mainPosts[mainPosts.length - 1]?.id;
+  //           console.log("화면 로딩");
+  //           dispatch({
+  //             type: LOAD_POSTS_REQUEST,
+  //             lastId
+  //           });
+  //         }
+  //       }
+  //     }
 
-      window.addEventListener("scroll", onScroll);
-      return () => {
-        window.addEventListener("scroll", onScroll);
-      };
-    },
-    [hasMorePosts, loadPostsLoading],
-    mainPosts
-  );
+  //     window.addEventListener("scroll", onScroll);
+  //     return () => {
+  //       window.addEventListener("scroll", onScroll);
+  //     };
+  //   },
+  //   [hasMorePosts, loadPostsLoading],
+  //   mainPosts
+  // );
 
   return (
     <>

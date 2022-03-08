@@ -1,15 +1,31 @@
 import React, { useRef, useMemo } from "react";
 import ReactQuill, { Quill } from "react-quill";
-
 import styled from "styled-components";
+import Head from "next/head";
+
+import hljs from "highlight.js";
+// import hljs from "highlightjs-line-numbers.js";
+//import { highlight, languages } from "prismjs/components/prism-core";
 
 import { backUrl } from "../../config/config";
 import EditorToolbar, { formats } from "./EditorToolbar";
-// or const { useQuill } = require('react-quilljs');
 
+import "react-quill/dist/quill.core.css";
+import "react-quill/dist/quill.bubble.css";
 import "quill/dist/quill.snow.css"; // Add css for snow theme
+import "highlight.js/styles/github.css";
+
 // or import 'quill/dist/quill.bubble.css'; // Add css for bubble theme
 
+hljs.configure({
+  languages: ["javascript", "ruby", "python", "rust"]
+});
+
+// hljsLine.initLineNumbersOnLoad({
+//   singleLine: true
+// });
+
+//hljs.highlightAll();
 // Add sizes to whitelist and register them
 const Size = Quill.import("formats/size");
 Size.whitelist = ["extra-small", "small", "medium", "large"];
@@ -32,6 +48,12 @@ const Editor = ({ text, handleChange }) => {
   const editorRef = useRef(null);
   //const dispatch = useDispatch();
   //const { uploadImageDone, imagePath } = useSelector(state => state.post);
+
+  // const hightlightWithLineNumbers = (input, language) =>
+  //   highlight(input, language)
+  //     .split("\n")
+  //     .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
+  //     .join("\n");
 
   const insertToEditor = url => {
     // 현재 커서 위치에 이미지를 삽입하고 커서 위치를 +1 하기
@@ -76,6 +98,11 @@ const Editor = ({ text, handleChange }) => {
     };
   };
 
+  // const codeBlockHandler = text => {
+  //   // console.log(text);
+  //   hljs.highlightAuto(text).value;
+  // };
+
   const modules = useMemo(() => {
     return {
       toolbar: {
@@ -88,6 +115,11 @@ const Editor = ({ text, handleChange }) => {
         delay: 500,
         maxStack: 100,
         userOnly: true
+      },
+      syntax: {
+        // highlight: code => hightlightWithLineNumbers(code, languages.js).value
+        highlight: code => hljs.highlightAuto(code).value
+        // highlight: code => hljs.lineNumbersBlock(code).value
       }
     };
   }, []);

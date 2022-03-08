@@ -5,7 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const { Post } = require("../models");
+const { Post, Hashtag, Image } = require("../models");
 
 const router = express.Router();
 
@@ -59,18 +59,64 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   // POST /post
+
+  // 정규식 표현식
+  // /(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/gi
+
+  //   var a =
+  //  ` <img src="http://localhost:3065/test_data_1646145745315.png">
+  // <img src="http://localhost:3065/test_data_1646145745315.png">
+  // <img src="http://localhost:3065/test_data_1646145745315.png">
+  // <img src="http://localhost:3065/test_data_1646145745315.png">
+  // <img src="http://localhost:3065/test_data_1646145745315.png">`;
+
+  // var b=/(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/gi;
+  // var s=a.match(b);
+
+  // console.log(s.map((a) => a.replace(b, "$2")));
+
   try {
+    // post 등록
     const post = await Post.create({
       content: req.body.content,
       title: req.body.title,
       //UserId: req.user.id,
     });
 
-    const fullPost = await Post.findOne({
-      where: { id: post.id },
-    });
+    const hashtags = req.body.content.match(/#[^\s#\+(<)]+/g);
 
-    res.status(201).json(fullPost);
+    if (hashtags) {
+      // 해쉬테그 등록
+      const result = await Promise.all(
+        hashtags.map((tag) =>
+          Hashtag.findOrCreate({
+            where: { keyword: tag.slice(1).toLowerCase() },
+          })
+        )
+      );
+
+      await post.addHashtags(result.map((v) => v[0]));
+    }
+
+    const regex = /(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/gi;
+    const imageTags = req.body.content.match(regex);
+
+    if (imageTags) {
+      const imageSrcs = imageTags.map((src) => src.replace(regex, "$2")); // src만 추출
+      // console.log("imageSrcs", imageSrcs);
+      const images = await Promise.all(
+        imageSrcs.map((image) => Image.create({ src: image }))
+      );
+      await post.addImages(images);
+    }
+
+    // const fullPost = await Post.findOne({
+    //   where: { id: post.id },
+    // });
+
+    // 이미지 url 등록
+
+    res.status(201).json(null);
   } catch (error) {
     console.error(error);
     next(error);

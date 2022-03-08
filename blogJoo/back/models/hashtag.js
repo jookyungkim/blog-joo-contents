@@ -12,7 +12,7 @@ module.exports = class Tag extends Model {
       },
       {
         modelName: "Hashtag",
-        tableName: "tags",
+        tableName: "hashtags",
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
         sequelize,
@@ -20,6 +20,6 @@ module.exports = class Tag extends Model {
     );
   }
   static associzte(db) {
-    db.Hashtag.belongsToMany(db.Post, { through: "postHashtag" });
+    db.Hashtag.belongsToMany(db.Post, { through: "postHashtags" });
   }
 };

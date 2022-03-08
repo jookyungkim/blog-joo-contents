@@ -51,6 +51,8 @@
       "default-param-last": 0,
       "import/prefer-default-export": 0,
       "jsx-a11y/anchor-is-valid": 0,
-      "spaced-comment": 0
+      "spaced-comment": 0,
+      "prefer-const": 0,
+      "no-restricted-syntax": 0
   }
 }

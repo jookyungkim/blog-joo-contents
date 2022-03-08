@@ -1,6 +1,6 @@
 const express = require("express");
 const { Op } = require("sequelize");
-const { Post, Image } = require("../models");
+const { Post, Image, User, Comment } = require("../models");
 
 const router = express.Router();
 
@@ -15,7 +15,28 @@ router.get("/", async (req, res, next) => {
       // Op.lt 이것보다 작은 의미
       where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
     }
-    const posts = await Post.findAll();
+
+    const posts = await Post.findAll({
+      where,
+      limit: 10,
+      order: [
+        ["createdAt", "DESC"],
+        [Comment, "createdAt", "DESC"],
+      ],
+      include: [
+        {
+          model: User,
+          attributes: ["id", "nickname"],
+        },
+        {
+          model: Image,
+        },
+        {
+          model: Comment,
+          include: [{ model: User, attributes: ["id", "nickname"] }],
+        },
+      ],
+    });
 
     res.status(200).json(posts);
   } catch (error) {

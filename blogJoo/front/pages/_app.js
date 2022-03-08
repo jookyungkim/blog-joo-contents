@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import Head from "next/head";
+
 import "../css/common.css";
 import wrapper from "../store/configureStore";
 

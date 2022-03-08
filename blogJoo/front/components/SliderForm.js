@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Carousel } from "react-responsive-carousel";
@@ -12,19 +13,18 @@ const MyCarousel = styled(Carousel)`
 `;
 
 const SliderForm = props => {
+  const { images } = props;
+  // console.log("images ", images);
+
   return (
     <>
       <div className="slider-form">
         <MyCarousel showThumbs={false}>
-          <div>
-            <img className="slider-img" src="https://fakeimg.pl/400/" alt="" />
-          </div>
-          <div>
-            <img className="slider-img" src="https://fakeimg.pl/400/" alt="" />
-          </div>
-          <div>
-            <img className="slider-img" src="https://fakeimg.pl/400/" alt="" />
-          </div>
+          {images.map((src, index) => (
+            <div key={index}>
+              <img className="slider-img" src={src} alt="" />
+            </div>
+          ))}
         </MyCarousel>
       </div>
       <style jsx>{`

@@ -1,19 +1,21 @@
 import React from "react";
+import Link from "next/link";
 import PropTypes from "prop-types";
 
 const PostCard = ({ post }) => {
   //console.log(post);
-
   return (
     <>
       <div className="post">
-        <a href={post.postId}>
-          <img src={post.Images[0].src} alt="" />
-          <div className="post-text">
-            <h4>{post.title}</h4>
-            <p>{post.content}</p>
-          </div>
-        </a>
+        <Link href={`/post/${post.id}`}>
+          <a>
+            <img src={post.Images[0]?.src} alt="" />
+            <div className="post-text">
+              <h4>{post.title}</h4>
+              <p>{post.content.replace(/(<([^>]+)>)/gi, "")}</p>
+            </div>
+          </a>
+        </Link>
       </div>
       <style jsx>{`
         .post {

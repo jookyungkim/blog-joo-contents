@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 import { END } from "redux-saga";
 
 import AppLayout from "../components/AppLayout";
@@ -9,12 +10,54 @@ import wrapper from "../store/configureStore";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
 
+const take = (l, iter) => {
+  let res = [];
+  for (const a of iter) {
+    res.push(a);
+    if (res.length === l) return res;
+  }
+  return res;
+};
+
 function index() {
+  const dispatch = useDispatch();
+  const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(state => state.post);
+
+  useEffect(
+    () => {
+      function onScroll() {
+        // console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
+
+        if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+          if (hasMorePosts && !loadPostsLoading) {
+            const lastId = mainPosts[mainPosts.length - 1]?.id;
+            console.log("화면 로딩");
+            dispatch({
+              type: LOAD_POSTS_REQUEST,
+              lastId
+            });
+          }
+        }
+      }
+
+      window.addEventListener("scroll", onScroll);
+      return () => {
+        window.addEventListener("scroll", onScroll);
+      };
+    },
+    [hasMorePosts, loadPostsLoading],
+    mainPosts
+  );
+
+  let images = mainPosts.map(post => post.Images[0]?.src);
+  images = images.filter(src => src !== undefined);
+  images = take(3, images);
+
   return (
     <AppLayout>
       <div className="main-inner">
-        <SliderForm />
-        <Posts />
+        <SliderForm images={images} />
+        <Posts mainPosts={mainPosts} />
       </div>
     </AppLayout>
   );
@@ -31,6 +74,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
     axios.defaults.headers.Cookie = cookie;
   }
 
+  // console.log("index getServerSideProps 흐름 확인");
   store.dispatch({
     type: LOAD_MY_INFO_REQUEST
   });

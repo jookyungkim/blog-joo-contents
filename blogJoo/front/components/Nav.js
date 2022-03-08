@@ -47,7 +47,7 @@ const Nav = () => {
             <div className="nav-categorys">
               <div className="nav-category-group">
                 <div className="category-title">
-                  <Link href="/post/LANGUAGE">
+                  <Link href="/posts/html">
                     <a>
                       <b>LANGUAGE</b>
                       <span> ( 10 )</span>
@@ -55,31 +55,31 @@ const Nav = () => {
                   </Link>
                 </div>
                 <div className="category-list">
-                  <Link href="/post/html">
+                  <Link href="/posts/html">
                     <a>
                       <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       <span>html</span>
                     </a>
                   </Link>
-                  <Link href="/post/css">
+                  <Link href="/posts/css">
                     <a>
                       <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       <span>css</span>
                     </a>
                   </Link>
-                  <Link href="/post/javascript">
+                  <Link href="/posts/javascript">
                     <a>
                       <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       <span>javascript</span>
                     </a>
                   </Link>
-                  <Link href="/post/java">
+                  <Link href="/posts/java">
                     <a>
                       <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       <span>java</span>
                     </a>
                   </Link>
-                  <Link href="/post/orcale">
+                  <Link href="/posts/orcale">
                     <a>
                       <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       <span>oracle</span>
@@ -97,7 +97,7 @@ const Nav = () => {
                   </Link>
                 </div>
                 <div className="category-list">
-                  <Link href="/post/vscode">
+                  <Link href="/posts/vscode">
                     <a>
                       <i className="fa fa-long-arrow-right" aria-hidden="true" />
                       <span>vscode</span>
@@ -108,7 +108,7 @@ const Nav = () => {
             </div>
             <div className="nav-category-group">
               <div className="category-title">
-                <Link href="/post/DEV">
+                <Link href="/posts/DEV">
                   <a>
                     <b>DEV</b>
                     <span> ( 2 )</span>
@@ -116,13 +116,13 @@ const Nav = () => {
                 </Link>
               </div>
               <div className="category-list">
-                <Link href="/post/git">
+                <Link href="/posts/git">
                   <a>
                     <i className="fa fa-long-arrow-right" aria-hidden="true" />
                     <span>git</span>
                   </a>
                 </Link>
-                <Link href="/post/핵심기능구현">
+                <Link href="/posts/핵심기능구현">
                   <a>
                     <i className="fa fa-long-arrow-right" aria-hidden="true" />
                     <span>핵심기능 구현</span>
@@ -132,7 +132,7 @@ const Nav = () => {
             </div>
             <div className="nav-category-group">
               <div className="category-title">
-                <Link href="ITSTORY">
+                <Link href="/posts/ITSTORY">
                   <a>
                     <b>IT STORY</b>
                     <span> ( 1 )</span>
@@ -140,7 +140,7 @@ const Nav = () => {
                 </Link>
               </div>
               <div className="category-list">
-                <Link href="뉴스기사">
+                <Link href="/posts/뉴스기사">
                   <a>
                     <i className="fa fa-long-arrow-right" aria-hidden="true" />
                     <span>뉴스/기사</span>

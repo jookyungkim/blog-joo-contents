@@ -28,6 +28,7 @@ function* loadPosts(action) {
   try {
     const result = yield call(loadPostsAPI, action.lastId);
 
+    // console.log("posts ", result.data);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data
