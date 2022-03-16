@@ -1,20 +1,44 @@
-import React from "react";
+import React, { useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { END } from "redux-saga";
+import DOMPurify from "isomorphic-dompurify";
+import styled from "styled-components";
+
+import wrapper from "../../store/configureStore";
+import { LOAD_POST_REQUEST } from "../../reducers/post";
+
+const CustomEditorView = styled.div`
+  img {
+    width: 100%;
+  }
+`;
 
 const postView = () => {
   const router = useRouter();
   const { id } = router.query;
+  const ref = useRef(null);
+
+  const singlePost = useSelector(state => state.post.singlePost);
+  const { Images, Hashtags } = singlePost;
+  // console.log("singlePost ", singlePost);
+  const firstSrc = Images[0]?.src;
 
   return (
     <>
       <div className="postView-container">
         <div className="slider-form">
-          <div className="slider-main">슬라이더</div>
+          <img src={firstSrc} alt="" />
         </div>
         <div className="postView-inner">
           <div className="postView-wrapper">
+            <CustomEditorView
+              className="post-detail"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(singlePost.content) }}
+            />
             <div className="postView-main">
-              <div className="post-detail">게시글 보이는 공간</div>
               <div className="button-group">
                 <div className="button-like-group">
                   <button className="common-button">좋아요</button>
@@ -26,11 +50,11 @@ const postView = () => {
                 </div>
               </div>
               <div className="beforeAfter-link-group">
-                <div className="beforeAfter-title">
+                {/* <div className="beforeAfter-title">
                   <h2>
                     {`language >`} <span>html 카테고리의 다른글</span>
                   </h2>
-                </div>
+                </div> */}
                 <hr />
                 <div className="beforeAfter-list">
                   <div className="beforeAfter-detail">
@@ -69,11 +93,11 @@ const postView = () => {
                 <hr />
               </div>
               <div className="tag-group">
-                <a href="#none">html</a>
-                <a href="#none">css</a>
-                <a href="#none">javascript</a>
-                <a href="#none">java</a>
-                <a href="#none">sql</a>
+                {Hashtags.map(tag => (
+                  <Link key={tag.id} href={`/posts/${tag.keyword}`}>
+                    <a>{tag.keyword}</a>
+                  </Link>
+                ))}
               </div>
             </div>
             <div className="serve-wrapper">
@@ -148,15 +172,20 @@ const postView = () => {
         }
 
         .slider-form {
-          width: 900px;
+          /* width: 100%; */
           margin: auto;
-          height: 200px;
+          overflow: hidden;
+          /* height: 200px; */
         }
 
-        .postView-wrapper .postView-main .post-detail {
-          height: 100px;
-          border: 1px solid blue;
+        .slider-form img {
+          width: 100%;
+          /* height: 250px; */
         }
+        /* .postView-wrapper .postView-main .post-detail {
+          height: 100px; 
+          border: 1px solid blue; 
+        } */
 
         .postView-wrapper .postView-main .button-group {
           margin-top: 15px;
@@ -419,6 +448,11 @@ const postView = () => {
             width: 100%;
           }
 
+          .slider-form img {
+            /* width: 100%; */
+            height: 250px;
+          }
+
           .postView-inner {
             width: 95%;
           }
@@ -459,5 +493,29 @@ const postView = () => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(store => async ({ req, res, ...etc }) => {
+  // **** 매우중요 ****
+  // 쿠키를 프론트 서버에서 벡엔드 서버로 보내준다. 브라우저는 간섭을 못한다.
+  // 실제 내 pc 쿠키가 있을때만 넣어주고 없을때는 "" 초기화 해주기
+
+  const cookie = req ? req.headers.cookie : "";
+  axios.defaults.headers.Cookie = "";
+  if (req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  // const router = useRouter();
+  // const { name } = router.query;
+  // console.log("etc$% ", etc.params);
+  const { id } = etc.params;
+
+  store.dispatch({
+    type: LOAD_POST_REQUEST,
+    data: id
+  });
+
+  store.dispatch(END);
+  await store.sagaTask.toPromise();
+});
 
 export default postView;

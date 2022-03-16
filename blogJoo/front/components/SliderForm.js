@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import Link from "next/link";
+
 import styled from "styled-components";
 import { Carousel } from "react-responsive-carousel";
 
@@ -12,18 +14,27 @@ const MyCarousel = styled(Carousel)`
   }
 `;
 
+const myLink = styled(Link)`
+  height: 100%;
+`;
+
 const SliderForm = props => {
+  // const { mainPosts } = useSelector(state => state.post);
   const { images } = props;
-  // console.log("images ", images);
+  //console.log("images ", images);
 
   return (
     <>
       <div className="slider-form">
-        <MyCarousel showThumbs={false}>
-          {images.map((src, index) => (
-            <div key={index}>
-              <img className="slider-img" src={src} alt="" />
-            </div>
+        <MyCarousel showThumbs={false} emulateTouch>
+          {images.map((data, index) => (
+            <Link key={data.id} href={`/post/${data.id}`}>
+              <a>
+                <div>
+                  <img className="slider-img" src={data.src} alt="" />
+                </div>
+              </a>
+            </Link>
           ))}
         </MyCarousel>
       </div>

@@ -47,7 +47,7 @@ const Nav = () => {
             <div className="nav-categorys">
               <div className="nav-category-group">
                 <div className="category-title">
-                  <Link href="/posts/html">
+                  <Link href="/posts/LANGUAGE">
                     <a>
                       <b>LANGUAGE</b>
                       <span> ( 10 )</span>
@@ -89,7 +89,7 @@ const Nav = () => {
               </div>
               <div className="nav-category-group">
                 <div className="category-title">
-                  <Link href="/post/IDE">
+                  <Link href="/posts/IDE">
                     <a>
                       <b>IDE</b>
                       <span> ( 1 )</span>

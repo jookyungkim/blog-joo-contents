@@ -19,7 +19,7 @@ const Editor = dynamic(
       return <RQ ref={forwardedRef} {...props} />;
     };
   },
-  { ssr: false }
+  { ssr: false, loading: () => <p>Loading...</p> }
 );
 
 const postRegister = () => {
@@ -59,6 +59,10 @@ const postRegister = () => {
     [text, title]
   );
 
+  const cancelButton = useCallback(() => {
+    Router.replace("/");
+  }, []);
+
   return (
     <>
       <div className="register-container">
@@ -73,7 +77,9 @@ const postRegister = () => {
               <button className="common-button" type="submit">
                 글쓰기
               </button>
-              <button className="common-button">취소</button>
+              <button className="common-button" type="button" onClick={cancelButton}>
+                취소
+              </button>
             </div>
           </form>
         </div>

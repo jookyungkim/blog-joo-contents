@@ -5,7 +5,6 @@ import produce from "../utill/produce";
 export const initialState = {
   imagePaths: [],
   mainPosts: [],
-  imagePath: null,
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
@@ -20,25 +19,29 @@ export const initialState = {
   removePostError: null,
   hasMorePosts: true,
   singlePost: null,
+  imagePath: null,
   uploadImageLoading: false,
   uploadImageDone: false,
-  uploadImageError: null
+  uploadImageError: null,
+  loadSearchPostsLoading: false,
+  loadSearchPostsDone: false,
+  loadSearchPostsError: null
 };
 
-export const generateDummyPost = number => {
-  return Array(number)
-    .fill()
-    .map(() => ({
-      id: shortId.generate(),
-      title: "input 태그 속성들",
-      content: faker.lorem.paragraph(),
-      Images: [
-        {
-          src: faker.image.image()
-        }
-      ]
-    }));
-};
+// export const generateDummyPost = number => {
+//   return Array(number)
+//     .fill()
+//     .map(() => ({
+//       id: shortId.generate(),
+//       title: "input 태그 속성들",
+//       content: faker.lorem.paragraph(),
+//       Images: [
+//         {
+//           src: faker.image.image()
+//         }
+//       ]
+//     }));
+// };
 
 export const LOAD_HASHTAG_POSTS_REQUEST = "LOAD_HASHTAG_POSTS_REQUEST";
 export const LOAD_HASHTAG_POSTS_SUCCESS = "LOAD_HASHTAG_POSTS_SUCCESS";
@@ -64,6 +67,10 @@ export const UPLOAD_IMAGE_REQUEST = "UPLOAD_IMAGE_REQUEST";
 export const UPLOAD_IMAGE_SUCCESS = "UPLOAD_IMAGE_SUCCESS";
 export const UPLOAD_IMAGE_FAILURE = "UPLOAD_IMAGE_FAILURE";
 
+export const LOAD_SEARCH_POSTS_REQUEST = "LOAD_SEARCH_POSTS_REQUEST";
+export const LOAD_SEARCH_POSTS_SUCCESS = "LOAD_SEARCH_POSTS_SUCCESS";
+export const LOAD_SEARCH_POSTS_FAILURE = "LOAD_SEARCH_POSTS_FAILURE";
+
 const dummyUser = data => ({});
 
 const reducer = (state = initialState, action) => {
@@ -78,12 +85,27 @@ const reducer = (state = initialState, action) => {
       case LOAD_POSTS_SUCCESS:
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
-        // draft.mainPosts = draft.mainPosts.concat(action.data);
-        draft.mainPosts = action.data;
+        draft.mainPosts = draft.mainPosts.concat(action.data);
+        draft.hasMorePosts = action.data.length === 10;
         break;
       case LOAD_POSTS_FAILURE:
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
+        break;
+      case LOAD_SEARCH_POSTS_REQUEST:
+        draft.loadSearchPostsLoading = true;
+        draft.loadSearchPostsDone = false;
+        draft.loadSearchPostsError = null;
+        break;
+      case LOAD_SEARCH_POSTS_SUCCESS:
+        draft.loadSearchPostsLoading = false;
+        draft.loadSearchPostsDone = true;
+        draft.mainPosts = draft.mainPosts.concat(action.data);
+        draft.hasMorePosts = action.data.length === 10;
+        break;
+      case LOAD_SEARCH_POSTS_FAILURE:
+        draft.loadSearchPostsLoading = false;
+        draft.loadSearchPostsError = action.error;
         break;
       case LOAD_POST_REQUEST:
         draft.loadPostLoading = true;

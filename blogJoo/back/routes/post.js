@@ -5,7 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const { Post, Hashtag, Image } = require("../models");
+const { Post, Hashtag, Image, User, Comment } = require("../models");
 
 const router = express.Router();
 
@@ -47,10 +47,54 @@ router.post("/image", upload.array("image"), async (req, res, next) => {
   res.status(201).json(req.files[0].filename);
 });
 
-router.get("/", async (req, res, next) => {
-  // GET /post
+// router.get("/", async (req, res, next) => {
+//   // GET /post
+//   try {
+//     res.status(200).send("post info");
+//   } catch (error) {
+//     console.error(error);
+//     next(error);
+//   }
+// });
+
+router.get("/:postId", async (req, res, next) => {
+  // GET /post/1
   try {
-    res.status(200).send("post info");
+    const post = await Post.findOne({
+      where: { id: req.params.postId },
+    });
+
+    if (!post) {
+      return res.status(404).send("존재하지 않는 게시글입니다.");
+    }
+
+    const fullPost = await Post.findOne({
+      where: { id: post.id },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "nickname"],
+        },
+        {
+          model: Image,
+        },
+        {
+          model: Hashtag,
+          attributes: ["id", "keyword"],
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: Comment,
+              as: "Parent_no",
+            },
+          ],
+        },
+      ],
+    });
+
+    res.status(200).json(fullPost);
   } catch (error) {
     console.error(error);
     next(error);
@@ -59,21 +103,6 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   // POST /post
-
-  // 정규식 표현식
-  // /(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/gi
-
-  //   var a =
-  //  ` <img src="http://localhost:3065/test_data_1646145745315.png">
-  // <img src="http://localhost:3065/test_data_1646145745315.png">
-  // <img src="http://localhost:3065/test_data_1646145745315.png">
-  // <img src="http://localhost:3065/test_data_1646145745315.png">
-  // <img src="http://localhost:3065/test_data_1646145745315.png">`;
-
-  // var b=/(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/gi;
-  // var s=a.match(b);
-
-  // console.log(s.map((a) => a.replace(b, "$2")));
 
   try {
     // post 등록
@@ -101,6 +130,7 @@ router.post("/", async (req, res, next) => {
     const regex = /(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/gi;
     const imageTags = req.body.content.match(regex);
 
+    // 이미지 url 등록
     if (imageTags) {
       const imageSrcs = imageTags.map((src) => src.replace(regex, "$2")); // src만 추출
       // console.log("imageSrcs", imageSrcs);
@@ -110,13 +140,7 @@ router.post("/", async (req, res, next) => {
       await post.addImages(images);
     }
 
-    // const fullPost = await Post.findOne({
-    //   where: { id: post.id },
-    // });
-
-    // 이미지 url 등록
-
-    res.status(201).json(null);
+    res.status(201).json(post.id);
   } catch (error) {
     console.error(error);
     next(error);

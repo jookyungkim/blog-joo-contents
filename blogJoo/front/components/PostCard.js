@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 const PostCard = ({ post }) => {
   //console.log(post);
+
   return (
     <>
       <div className="post">
@@ -12,7 +13,11 @@ const PostCard = ({ post }) => {
             <img src={post.Images[0]?.src} alt="" />
             <div className="post-text">
               <h4>{post.title}</h4>
-              <p>{post.content.replace(/(<([^>]+)>)/gi, "")}</p>
+              <p>
+                {post.content.length > 100
+                  ? `${post.content.replace(/(<([^>]+)>)/gi, "").substring(1, 97)} ...`
+                  : post.content.replace(/(<([^>]+)>)/gi, "")}
+              </p>
             </div>
           </a>
         </Link>

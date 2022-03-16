@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { END } from "redux-saga";
+import Link from "next/link";
 
 import AppLayout from "../components/AppLayout";
 import Posts from "../components/Posts";
@@ -9,20 +10,13 @@ import SliderForm from "../components/sliderForm";
 import wrapper from "../store/configureStore";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
-
-const take = (l, iter) => {
-  let res = [];
-  for (const a of iter) {
-    res.push(a);
-    if (res.length === l) return res;
-  }
-  return res;
-};
+import { take } from "../commonJS";
 
 function index() {
   const dispatch = useDispatch();
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(state => state.post);
 
+  // 페이징 처리
   useEffect(
     () => {
       function onScroll() {
@@ -31,7 +25,7 @@ function index() {
         if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
           if (hasMorePosts && !loadPostsLoading) {
             const lastId = mainPosts[mainPosts.length - 1]?.id;
-            console.log("화면 로딩");
+            // console.log("화면 로딩");
             dispatch({
               type: LOAD_POSTS_REQUEST,
               lastId
@@ -49,16 +43,37 @@ function index() {
     mainPosts
   );
 
-  let images = mainPosts.map(post => post.Images[0]?.src);
-  images = images.filter(src => src !== undefined);
-  images = take(3, images);
+  // 슬라이더 data
+  let postImages = [];
+  let count = 0;
+  for (const data of mainPosts) {
+    //console.log(data.Images[0]?.src);
+    // console.log(isData(data.Images[0]?.src));
+
+    if (data.Images[0]?.src !== undefined) {
+      postImages.push({ id: data.id, src: data.Images[0].src });
+      ++count;
+      if (count === 3) break;
+    }
+  }
 
   return (
     <AppLayout>
       <div className="main-inner">
-        <SliderForm images={images} />
+        <SliderForm images={postImages} />
+        <Link href="/postRegister">
+          <a className="common-link">게시글등록</a>
+        </Link>
         <Posts mainPosts={mainPosts} />
       </div>
+
+      <style jsx>{`
+        .common-link {
+          margin-top: 15px;
+          margin-left: auto;
+          /* margin-bottom: 8px; */
+        }
+      `}</style>
     </AppLayout>
   );
 }

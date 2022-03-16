@@ -90,7 +90,11 @@ hr {
   margin: auto;
 }
 
-.common-button {
+.common-link {
+  width: 120px;
+}
+
+.common-link, .common-button {
   background-color: #FFFFFF;
   border: 1px solid rgb(209,213,219);
   border-radius: .5rem;
@@ -111,11 +115,11 @@ hr {
   display: block;
 }
 
-.common-button:hover {
+.common-link, .common-button:hover {
   background-color: rgb(249,250,251);
 }
 
-.common-button:focus {
+.common-link, .common-button:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
@@ -123,6 +127,8 @@ hr {
 .common-button:focus-visible {
   box-shadow: none;
 }
+
+
 
 /* EditorTollbar css set*/
 /* Set content for font-families */

@@ -6,6 +6,9 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   LOAD_POSTS_FAILURE,
+  LOAD_SEARCH_POSTS_REQUEST,
+  LOAD_SEARCH_POSTS_SUCCESS,
+  LOAD_SEARCH_POSTS_FAILURE,
   LOAD_POST_REQUEST,
   LOAD_POST_SUCCESS,
   LOAD_POST_FAILURE,
@@ -21,14 +24,33 @@ import {
 } from "../reducers/post";
 
 function loadPostsAPI(lastId) {
+  //console.log("lastId", lastId);
   return axios.get(`/posts?lastId=${lastId || 0}`); // lastId undefind 인경우 0으로 치환
 }
 
 function* loadPosts(action) {
   try {
     const result = yield call(loadPostsAPI, action.lastId);
+    yield put({
+      type: LOAD_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_POSTS_FAILURE,
+      error: err.response.data
+    });
+  }
+}
 
-    // console.log("posts ", result.data);
+function loadSearchPostsAPI(data) {
+  return axios.get(`/posts/${data.text}?lastId=${data.lastId || 0}`); // lastId undefind 인경우 0으로 치환
+}
+
+function* loadSearchPosts(action) {
+  try {
+    const result = yield call(loadSearchPostsAPI, action.data);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       data: result.data
@@ -129,6 +151,10 @@ function* watchLoadPosts() {
   yield throttle(10000, LOAD_POSTS_REQUEST, loadPosts);
 }
 
+function* watchLoadSearchPosts() {
+  yield throttle(10000, LOAD_SEARCH_POSTS_REQUEST, loadSearchPosts);
+}
+
 function* watchLoadPost() {
   yield takeLatest(LOAD_POST_REQUEST, loadPost);
 }
@@ -151,6 +177,7 @@ export default function* postSaga() {
     fork(watchLoadPost),
     fork(watchAddPost),
     fork(watchRemovePost),
-    fork(watchUploadImage)
+    fork(watchUploadImage),
+    fork(watchLoadSearchPosts)
   ]);
 }
