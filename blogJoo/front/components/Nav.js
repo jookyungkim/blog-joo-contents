@@ -1,8 +1,10 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { mainCategorys } = useSelector(state => state.category);
 
   return (
     <>
@@ -45,108 +47,28 @@ const Nav = () => {
             </div>
             <hr />
             <div className="nav-categorys">
-              <div className="nav-category-group">
-                <div className="category-title">
-                  <Link href="/posts/LANGUAGE">
-                    <a>
-                      <b>LANGUAGE</b>
-                      <span> ( 10 )</span>
-                    </a>
-                  </Link>
+              {mainCategorys.map((data, index) => (
+                <div key={index} className="nav-category-group">
+                  <div className="category-title">
+                    <Link href={`/posts/${data.name}`}>
+                      <a>
+                        <b>{data.name}</b>
+                        <span> ( {data.SubCategorys.length} )</span>
+                      </a>
+                    </Link>
+                  </div>
+                  <div className="category-list">
+                    {data.SubCategorys.map((value, i) => (
+                      <Link key={i} href={`/posts/${value.name}`}>
+                        <a>
+                          <i className="fa fa-long-arrow-right" aria-hidden="true" />
+                          <span>{value.name}</span>
+                        </a>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <div className="category-list">
-                  <Link href="/posts/html">
-                    <a>
-                      <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      <span>html</span>
-                    </a>
-                  </Link>
-                  <Link href="/posts/css">
-                    <a>
-                      <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      <span>css</span>
-                    </a>
-                  </Link>
-                  <Link href="/posts/javascript">
-                    <a>
-                      <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      <span>javascript</span>
-                    </a>
-                  </Link>
-                  <Link href="/posts/java">
-                    <a>
-                      <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      <span>java</span>
-                    </a>
-                  </Link>
-                  <Link href="/posts/orcale">
-                    <a>
-                      <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      <span>oracle</span>
-                    </a>
-                  </Link>
-                </div>
-              </div>
-              <div className="nav-category-group">
-                <div className="category-title">
-                  <Link href="/posts/IDE">
-                    <a>
-                      <b>IDE</b>
-                      <span> ( 1 )</span>
-                    </a>
-                  </Link>
-                </div>
-                <div className="category-list">
-                  <Link href="/posts/vscode">
-                    <a>
-                      <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      <span>vscode</span>
-                    </a>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="nav-category-group">
-              <div className="category-title">
-                <Link href="/posts/DEV">
-                  <a>
-                    <b>DEV</b>
-                    <span> ( 2 )</span>
-                  </a>
-                </Link>
-              </div>
-              <div className="category-list">
-                <Link href="/posts/git">
-                  <a>
-                    <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                    <span>git</span>
-                  </a>
-                </Link>
-                <Link href="/posts/핵심기능구현">
-                  <a>
-                    <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                    <span>핵심기능 구현</span>
-                  </a>
-                </Link>
-              </div>
-            </div>
-            <div className="nav-category-group">
-              <div className="category-title">
-                <Link href="/posts/ITSTORY">
-                  <a>
-                    <b>IT STORY</b>
-                    <span> ( 1 )</span>
-                  </a>
-                </Link>
-              </div>
-              <div className="category-list">
-                <Link href="/posts/뉴스기사">
-                  <a>
-                    <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                    <span>뉴스/기사</span>
-                  </a>
-                </Link>
-              </div>
+              ))}
             </div>
           </div>
         </div>

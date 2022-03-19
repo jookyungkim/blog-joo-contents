@@ -5,7 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const { Post, Hashtag, Image, User, Comment } = require("../models");
+const { Post, Hashtag, Image, User, Comment, Category } = require("../models");
 
 const router = express.Router();
 
@@ -103,14 +103,23 @@ router.get("/:postId", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   // POST /post
-
+  console.log("comboBox : ", req.body.comboBox);
   try {
+    const category = await Category.findOne({
+      where: { id: parseInt(req.body.comboBox) },
+    });
+
+    if (!category) {
+      res.status(403).send("존재하지 않는 카테고리 입니다.");
+    }
     // post 등록
     const post = await Post.create({
       content: req.body.content,
       title: req.body.title,
       //UserId: req.user.id,
     });
+
+    post.addCategoryPosts(category.id);
 
     const hashtags = req.body.content.match(/#[^\s#\+(<)]+/g);
 

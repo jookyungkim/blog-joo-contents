@@ -31,6 +31,9 @@ module.exports = class Comment extends Model {
   static associate(db) {
     db.Comment.belongsTo(db.User);
     db.Comment.belongsTo(db.Post);
-    db.Comment.belongsTo(db.Comment, { as: "Parent_no" });
+    db.Comment.hasMany(db.Comment, {
+      as: "subComment",
+      foreignKey: "parentId",
+    });
   }
 };

@@ -29,5 +29,9 @@ module.exports = class Post extends Model {
     db.Post.hasMany(db.Comment);
     db.Post.belongsToMany(db.Hashtag, { through: "postHashtag" });
     db.Post.hasMany(db.Image);
+    db.Post.belongsToMany(db.Category, {
+      through: "categoryPost",
+      as: "categoryPosts",
+    });
   }
 };

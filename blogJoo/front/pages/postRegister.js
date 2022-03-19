@@ -37,8 +37,14 @@ const postRegister = () => {
     }
   }, [addPostError]);
 
-  const [text, setText] = useState(null);
+  const [comboBox, setComboBox] = useState("2");
   const [title, onChangeTitle] = userInput(null);
+  const [text, setText] = useState(null);
+
+  const onChangeComboBox = useCallback(e => {
+    // console.log("comboBox value", e.target.value);
+    setComboBox(e.target.value);
+  }, comboBox);
 
   const handleChange = useCallback(
     value => {
@@ -51,9 +57,11 @@ const postRegister = () => {
     e => {
       e.preventDefault();
 
+      // console.log("comboBox ", comboBox);
+
       dispatch({
         type: ADD_POST_REQUEST,
-        data: { content: text, title }
+        data: { content: text, title, comboBox }
       });
     },
     [text, title]
@@ -69,6 +77,17 @@ const postRegister = () => {
         <div className="register-inner">
           <h3>재미있는 코딩 스토리~</h3>
           <form onSubmit={onSubmitForm}>
+            <select value={comboBox} onChange={onChangeComboBox}>
+              <option value="2">html</option>
+              <option value="3">css</option>
+              <option value="4">javaScript</option>
+              <option value="5">java</option>
+              <option value="6">orcalte</option>
+              <option value="8">vscode</option>
+              <option value="10">git</option>
+              <option value="11">핵심기능 구현</option>
+              <option value="13">뉴스/기사</option>
+            </select>
             <input type="text" className="register-title" value={title || ""} onChange={onChangeTitle} />
             <div className="aditerBox">
               <Editor text={text} handleChange={handleChange} />

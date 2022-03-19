@@ -10,7 +10,7 @@ import SliderForm from "../components/sliderForm";
 import wrapper from "../store/configureStore";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
-import { take } from "../commonJS";
+import { LOAD_CATEGORYS_REQUEST } from "../reducers/category";
 
 function index() {
   const dispatch = useDispatch();
@@ -47,9 +47,6 @@ function index() {
   let postImages = [];
   let count = 0;
   for (const data of mainPosts) {
-    //console.log(data.Images[0]?.src);
-    // console.log(isData(data.Images[0]?.src));
-
     if (data.Images[0]?.src !== undefined) {
       postImages.push({ id: data.id, src: data.Images[0].src });
       ++count;
@@ -96,6 +93,10 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
 
   store.dispatch({
     type: LOAD_POSTS_REQUEST
+  });
+
+  store.dispatch({
+    type: LOAD_CATEGORYS_REQUEST
   });
 
   store.dispatch(END);

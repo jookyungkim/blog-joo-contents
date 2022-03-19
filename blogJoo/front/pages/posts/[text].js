@@ -9,6 +9,7 @@ import wrapper from "../../store/configureStore";
 import AppLayout from "../../components/AppLayout";
 import Posts from "../../components/Posts";
 import { LOAD_POSTS_REQUEST, LOAD_SEARCH_POSTS_REQUEST } from "../../reducers/post";
+import { LOAD_CATEGORYS_REQUEST } from "../../reducers/category";
 
 const Post = props => {
   const router = useRouter();
@@ -111,6 +112,10 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
       type: LOAD_POSTS_REQUEST
     });
   }
+
+  store.dispatch({
+    type: LOAD_CATEGORYS_REQUEST
+  });
 
   store.dispatch(END);
   await store.sagaTask.toPromise();
