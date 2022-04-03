@@ -13,6 +13,10 @@ module.exports = class Category extends Model {
         //   type: DataTypes.INTEGER,
         //   // allowNull: false,
         // },
+        // viewCode: {
+        //   type: DataTypes.STRING("10"),
+        //   allowNull: false,
+        // },
       },
       {
         modelName: "Category",
@@ -26,8 +30,8 @@ module.exports = class Category extends Model {
 
   static associate(db) {
     db.Category.belongsToMany(db.Post, {
+      as: "CategoryPosts",
       through: "categoryPost",
-      as: "categoryPosts",
     });
 
     db.Category.hasMany(db.Category, {

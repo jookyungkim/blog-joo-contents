@@ -5,7 +5,7 @@ module.exports = class Comment extends Model {
   static init(sequelize) {
     return super.init(
       {
-        content: {
+        text: {
           type: DataTypes.STRING(100),
           allowNull: false,
         },
@@ -15,6 +15,10 @@ module.exports = class Comment extends Model {
         },
         password: {
           type: DataTypes.STRING(30),
+          allowNull: true,
+        },
+        cancelYn: {
+          type: DataTypes.STRING(1),
           allowNull: true,
         },
       },
@@ -32,7 +36,7 @@ module.exports = class Comment extends Model {
     db.Comment.belongsTo(db.User);
     db.Comment.belongsTo(db.Post);
     db.Comment.hasMany(db.Comment, {
-      as: "subComment",
+      as: "subComments",
       foreignKey: "parentId",
     });
   }

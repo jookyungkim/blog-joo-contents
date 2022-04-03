@@ -5,7 +5,7 @@ module.exports = class Search extends Model {
   static init(sequelize) {
     return super.init(
       {
-        content: {
+        text: {
           type: DataTypes.TEXT,
           allowNull: false,
         },
@@ -20,5 +20,7 @@ module.exports = class Search extends Model {
     );
   }
 
-  // static associate(db) {}
+  static associate(db) {
+    db.Search.belongsTo(db.User);
+  }
 };

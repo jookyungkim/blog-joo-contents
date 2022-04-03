@@ -21,9 +21,13 @@ router.get("/", async (req, res, next) => {
       limit: 10,
       order: [
         ["createdAt", "DESC"],
-        [Comment, "createdAt", "DESC"],
+        // [Comment, "createdAt", "DESC"],
       ],
       include: [
+        {
+          model: Category,
+          as: "CategoryPosts",
+        },
         {
           model: User,
           attributes: ["id", "nickname"],
@@ -31,10 +35,10 @@ router.get("/", async (req, res, next) => {
         {
           model: Image,
         },
-        {
-          model: Comment,
-          include: [{ model: User, attributes: ["id", "nickname"] }],
-        },
+        // {
+        //   model: Comment,
+        //   include: [{ model: User, attributes: ["id", "name"] }],
+        // },
       ],
     });
 
@@ -46,7 +50,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/:categoryText", async (req, res, next) => {
-  // GET /posts/1
+  // GET /posts/html
 
   console.log("categoryText ", req.params.categoryText);
   try {
@@ -54,7 +58,7 @@ router.get("/:categoryText", async (req, res, next) => {
       where: { name: req.params.categoryText },
     });
 
-    console.log("category : ", category.id);
+    //console.log("category : ", category.id);
     if (!category) {
       return res.status(403).send("존재하지 않는 카테고리 입니다.");
     }
@@ -76,7 +80,7 @@ router.get("/:categoryText", async (req, res, next) => {
       include: [
         {
           model: Category,
-          as: "categoryPosts",
+          as: "CategoryPosts",
           where: { id: category.id },
         },
         {
@@ -86,9 +90,107 @@ router.get("/:categoryText", async (req, res, next) => {
         {
           model: Image,
         },
+        // {
+        //   model: Comment,
+        //   include: [{ model: User, attributes: ["id", "name"] }],
+        // },
+      ],
+    });
+
+    res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+router.get("/tag/:keyword", async (req, res, next) => {
+  // GET /posts/tag/과일
+
+  console.log("keyword ", req.params.keyword);
+  try {
+    const hashtag = await Hashtag.findOne({
+      where: { keyword: req.params.keyword },
+    });
+
+    if (!hashtag) {
+      return res.status(403).send("존재하지 않는 해쉬테그 입니다.");
+    }
+    const where = {};
+    // where.title = { [Op.like]: "%" + req.params.postText + "%" };
+
+    if (parseInt(req.query.lastId, 10)) {
+      // 초기 로딩이 아닐 때
+      // 보다 작은 거 10개 불러오기
+      // 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
+      // Op.lt 이것보다 작은 의미
+      where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
+    }
+
+    const posts = await Post.findAll({
+      where,
+      limit: 10,
+      order: [["createdAt", "DESC"]],
+      include: [
         {
-          model: Comment,
-          include: [{ model: User, attributes: ["id", "nickname"] }],
+          model: Hashtag,
+          as: "postHashtags",
+          where: { id: hashtag.id },
+        },
+        {
+          model: User,
+          attributes: ["id", "nickname"],
+        },
+        {
+          model: Image,
+        },
+        // {
+        //   model: Comment,
+        //   include: [{ model: User, attributes: ["id", "name"] }],
+        // },
+      ],
+    });
+
+    res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+router.get("/sub/linkPages", async (req, res, next) => {
+  // GET /posts/subLinkPages
+
+  // req.query.targetId  3
+  // req.query.limit     4
+  // req.query.offset    2
+  console.log("subLinkPages : ", req.query);
+  // return res.status(200).json(false);
+  const targetId = parseInt(req.query.targetId);
+  const limit = parseInt(req.query.limit);
+  let offset = parseInt(req.query.offset);
+
+  try {
+    const where = {};
+    let postMaxId = await Post.max("id", {
+      where: { id: { [Op.lt]: targetId } },
+    }); // 10 // < targetId
+
+    if (postMaxId - offset < 0) {
+      postMaxId = 0;
+    } else {
+      postMaxId = postMaxId - offset;
+    }
+    where.id = { [Op.gte]: postMaxId };
+
+    const posts = await Post.findAll({
+      where,
+      limit: limit,
+      order: [["createdAt", "ASC"]],
+      include: [
+        {
+          model: User,
+          attributes: ["id", "nickname"],
         },
       ],
     });

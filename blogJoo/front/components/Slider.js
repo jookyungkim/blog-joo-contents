@@ -18,7 +18,7 @@ const myLink = styled(Link)`
   height: 100%;
 `;
 
-const SliderForm = props => {
+const Slider = props => {
   // const { mainPosts } = useSelector(state => state.post);
   const { images } = props;
   //console.log("images ", images);
@@ -67,6 +67,6 @@ const SliderForm = props => {
   );
 };
 
-SliderForm.propTypes = {};
+Slider.propTypes = {};
 
-export default SliderForm;
+export default Slider;

@@ -1,70 +1,81 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { END } from "redux-saga";
-import { useDispatch, useSelector } from "react-redux";
 
-import wrapper from "../store/configureStore";
-import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
-import { ADD_POST_REQUEST } from "../reducers/post";
-import userInput from "../hooks/useInput";
-
-// import Editor from "../components/editor";
+import wrapper from "../../store/configureStore";
+import userInput from "../../hooks/useInput";
+import { LOAD_POST_REQUEST, UPDATE_POST_REQUEST } from "../../reducers/post";
 
 const Editor = dynamic(
   async () => {
-    const { default: RQ } = await import("../components/editor");
+    const { default: RQ } = await import("../../components/editor");
     return function comp({ forwardedRef, ...props }) {
       return <RQ ref={forwardedRef} {...props} />;
     };
   },
-  { ssr: false, loading: () => <p>Loading...</p> }
+  { ssr: false }
 );
 
-const postRegister = () => {
+const postModify = () => {
   const dispatch = useDispatch();
-  const { addPostDone, addPostError } = useSelector(state => state.post);
+  const router = useRouter();
+  const { id } = router.query;
+  const postId = parseInt(id, 10);
+
+  const { singlePost, updatePostDone, updatePostError } = useSelector(state => state.post);
+
   useEffect(() => {
-    if (addPostDone) {
+    if (updatePostDone) {
       Router.replace("/");
     }
-  }, [addPostDone]);
+  }, [updatePostDone]);
 
   useEffect(() => {
-    if (addPostError) {
-      alert(addPostError);
+    if (updatePostError) {
+      alert(updatePostError);
     }
-  }, [addPostError]);
+  }, [updatePostError]);
 
-  const [comboBox, setComboBox] = useState("2");
-  const [content, setContent] = useState(null);
-  const [title, onChangeTitle] = userInput(null);
-
+  const [comboBox, setComboBox] = useState();
   const onChangeComboBox = useCallback(e => {
     // console.log("comboBox value", e.target.value);
     setComboBox(e.target.value);
-  }, comboBox);
+  }, []);
 
+  const [title, setTitle] = useState();
+  const titleHandler = useCallback(e => {
+    // console.log("comboBox value", e.target.value);
+    setTitle(e.target.value);
+  }, []);
+
+  const [content, setContent] = useState();
   const handleChange = useCallback(
     value => {
+      // console.log("aditor value : ", value);
       setContent(value);
     },
     [content]
   );
 
+  useEffect(() => {
+    setTitle(singlePost.title);
+    setContent(singlePost.content);
+    setComboBox(singlePost.CategoryPosts[0]?.id.toString());
+  }, [singlePost]);
+
   const onSubmitForm = useCallback(
     e => {
       e.preventDefault();
-
-      // console.log("comboBox ", comboBox);
-
+      // console.log("content !@# ", content);
       dispatch({
-        type: ADD_POST_REQUEST,
-        data: { content, title, comboBox }
+        type: UPDATE_POST_REQUEST,
+        data: { id: postId, content, title, comboBox }
       });
     },
-    [content, title]
+    [title, content, comboBox]
   );
 
   const cancelButton = useCallback(() => {
@@ -88,13 +99,13 @@ const postRegister = () => {
               <option value="11">핵심기능 구현</option>
               <option value="13">뉴스/기사</option>
             </select>
-            <input type="text" className="register-title" value={title || ""} onChange={onChangeTitle} />
+            <input type="text" className="register-title" value={title || ""} onChange={titleHandler} />
             <div className="aditerBox">
               <Editor text={content} handleChange={handleChange} />
             </div>
             <div className="button-group">
               <button className="common-button" type="submit">
-                글쓰기
+                수정
               </button>
               <button className="common-button" type="button" onClick={cancelButton}>
                 취소
@@ -118,14 +129,12 @@ const postRegister = () => {
           margin: auto;
           width: 900px;
           height: 600px;
-          /* border: 1px solid red; */
         }
 
         .register-container .register-inner h3 {
           font-size: 1.5em;
           margin-bottom: 15px;
         }
-
         .register-container .register-inner .register-title {
           width: 100%;
           height: 50px;
@@ -137,6 +146,12 @@ const postRegister = () => {
 
         .register-container .register-inner .aditerBox {
           /* border: 1px solid #ccc; */
+          width: 100%;
+          height: 500px;
+        }
+
+        .register-container .register-inner .aditerBox {
+          border: 1px solid #ccc;
           width: 100%;
           height: 500px;
         }
@@ -173,7 +188,9 @@ const postRegister = () => {
           .register-container .register-inner h3 {
             margin-top: 15px;
           }
-
+          .register-container .register-inner .aditerBox {
+            height: 70%;
+          }
           .register-container .register-inner .register-title {
             /* width: 100%; */
           }
@@ -210,12 +227,16 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
     axios.defaults.headers.Cookie = cookie;
   }
 
+  const { id } = etc.params;
+  const postId = id;
+
   store.dispatch({
-    type: LOAD_MY_INFO_REQUEST
+    type: LOAD_POST_REQUEST,
+    data: postId
   });
 
   store.dispatch(END);
   await store.sagaTask.toPromise();
 });
 
-export default postRegister;
+export default postModify;

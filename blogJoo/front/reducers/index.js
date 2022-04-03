@@ -4,6 +4,7 @@ import { combineReducers } from "redux";
 import user from "./user";
 import post from "./post";
 import category from "./category";
+import comment from "./comment";
 
 // (이전상태, 액션) => 다음상태
 // combineReducers는 rudux들을 합처준다.
@@ -17,7 +18,8 @@ const rootReducer = (state, action) => {
       const combindedReducer = combineReducers({
         user,
         post,
-        category
+        category,
+        comment
       });
       return combindedReducer(state, action);
     }

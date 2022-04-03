@@ -1,10 +1,10 @@
 import produce from "../utill/produce";
 
 export const initialState = {
+  mainCategorys: [],
   loadCategorysLoading: false, // 로그인 시도중
   loadCategorysDone: false,
-  loadCategorysError: null,
-  mainCategorys: null
+  loadCategorysError: null
 };
 
 export const LOAD_CATEGORYS_REQUEST = "LOAD_CATEGORYS_REQUEST";
@@ -20,14 +20,14 @@ const reducer = (state = initialState, action) => {
         draft.loadCategorysError = null;
         break;
       case LOAD_CATEGORYS_SUCCESS:
-        draft.logInLoading = false;
-        draft.logInDone = true;
+        draft.loadCategorysLoading = false;
+        draft.loadCategorysDone = true;
         draft.mainCategorys = action.data;
         break;
       case LOAD_CATEGORYS_FAILURE:
-        draft.logInLoading = false;
-        draft.logInDone = false;
-        draft.logInError = action.error;
+        draft.loadCategorysLoading = false;
+        draft.loadCategorysDone = false;
+        draft.loadCategorysError = action.error;
         break;
       default:
         break;

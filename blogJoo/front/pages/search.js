@@ -1,3 +1,5 @@
+import SearchBlock from "../components/SearchBlock";
+
 const search = () => {
   return (
     <div>
@@ -7,11 +9,12 @@ const search = () => {
             <div className="input-search-group">
               <h2>무엇을 찾고 계산가요?</h2>
               <div className="search-input">
-                <input type="text" />
+                <input type="search" />
                 <button>
                   <i className="fa fa-search" aria-hidden="true" />
                 </button>
               </div>
+              <SearchBlock />
             </div>
             <div className="recent-search">
               <h2>최근검색</h2>

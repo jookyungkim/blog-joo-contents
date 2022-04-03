@@ -13,6 +13,8 @@ const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 const categorysRouter = require("./routes/categorys");
+const commentRouter = require("./routes/comment");
+const commentsRouter = require("./routes/comments");
 
 const db = require("./models");
 const passportConfig = require("./passport");
@@ -69,6 +71,8 @@ app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/posts", postsRouter);
 app.use("/categorys", categorysRouter);
+app.use("/comment", commentRouter);
+app.use("/comments", commentsRouter);
 
 // 에러 처리 미들웨어 이다.
 // 여기에 소스가 없으면 내부적으로 이쪽에 생성된다.

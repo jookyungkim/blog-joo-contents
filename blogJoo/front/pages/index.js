@@ -5,8 +5,8 @@ import { END } from "redux-saga";
 import Link from "next/link";
 
 import AppLayout from "../components/AppLayout";
-import Posts from "../components/Posts";
-import SliderForm from "../components/sliderForm";
+import PostList from "../components/PostList";
+import Slider from "../components/Slider";
 import wrapper from "../store/configureStore";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
@@ -57,11 +57,11 @@ function index() {
   return (
     <AppLayout>
       <div className="main-inner">
-        <SliderForm images={postImages} />
+        <Slider images={postImages} />
         <Link href="/postRegister">
           <a className="common-link">게시글등록</a>
         </Link>
-        <Posts mainPosts={mainPosts} />
+        <PostList mainPosts={mainPosts} />
       </div>
 
       <style jsx>{`

@@ -3,6 +3,8 @@ import axios from "axios";
 import userSaga from "./user";
 import postSaga from "./post";
 import categorySaga from "./category";
+import commentSaga from "./comment";
+
 import { backUrl } from "../config/config";
 
 axios.defaults.baseURL = backUrl;
@@ -25,5 +27,5 @@ axios.defaults.withCredentials = true;
  */
 
 export default function* rootSaga() {
-  yield all([fork(userSaga), fork(postSaga), fork(categorySaga)]);
+  yield all([fork(userSaga), fork(postSaga), fork(categorySaga), fork(commentSaga)]);
 }

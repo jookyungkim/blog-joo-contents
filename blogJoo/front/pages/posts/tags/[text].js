@@ -5,27 +5,18 @@ import Head from "next/head";
 import axios from "axios";
 import { END } from "redux-saga";
 
-import wrapper from "../../store/configureStore";
-import AppLayout from "../../components/AppLayout";
-import PostList from "../../components/PostList";
-import { LOAD_POSTS_REQUEST, LOAD_SEARCH_POSTS_REQUEST } from "../../reducers/post";
-import { LOAD_CATEGORYS_REQUEST } from "../../reducers/category";
+import wrapper from "../../../store/configureStore";
+import AppLayout from "../../../components/AppLayout";
+import Posts from "../../../components/Posts";
+import { LOAD_HASHTAG_POSTS_REQUEST } from "../../../reducers/post";
+import { LOAD_CATEGORYS_REQUEST } from "../../../reducers/category";
 
 const Post = props => {
   const router = useRouter();
   const { text } = router.query;
 
   const dispatch = useDispatch();
-  const { mainPosts, hasMorePosts, loadPostsLoading, loadSearchPostsLoading } = useSelector(state => state.post);
-
-  // useEffect(() => {
-  //   if (!loadSearchPostsLoading && text) {
-  //     dispatch({
-  //       type: LOAD_SEARCH_POSTS_REQUEST,
-  //       data: { text: text }
-  //     });
-  //   }
-  // }, [loadSearchPostsLoading, text]);
+  const { mainPosts, hasMorePosts, loadHashtagPostsLoading } = useSelector(state => state.post);
 
   useEffect(
     () => {
@@ -34,25 +25,14 @@ const Post = props => {
 
         if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
           // 화면 이동시
-          if (text) {
-            if (hasMorePosts && !loadSearchPostsLoading) {
-              const lastId = mainPosts[mainPosts.length - 1]?.id;
-              console.log("posts 개인화면 로딩");
-              dispatch({
-                type: LOAD_POSTS_REQUEST,
-                lastId
-              });
-            }
-            // 기본 index 화면
-          } else {
-            if (hasMorePosts && !loadPostsLoading) {
-              const lastId = mainPosts[mainPosts.length - 1]?.id;
-              console.log("index 화면 로딩");
-              dispatch({
-                type: LOAD_SEARCH_POSTS_REQUEST,
-                data: { text, lastId }
-              });
-            }
+
+          if (hasMorePosts && !loadHashtagPostsLoading) {
+            const lastId = mainPosts[mainPosts.length - 1]?.id;
+            console.log("index 화면 로딩");
+            dispatch({
+              type: LOAD_HASHTAG_POSTS_REQUEST,
+              data: { text, lastId }
+            });
           }
         }
       }
@@ -62,7 +42,7 @@ const Post = props => {
         window.addEventListener("scroll", onScroll);
       };
     },
-    [hasMorePosts, loadPostsLoading, loadSearchPostsLoading],
+    [hasMorePosts, loadHashtagPostsLoading],
     mainPosts
   );
 
@@ -74,7 +54,7 @@ const Post = props => {
         </Head>
         <div className="main-inner">
           <h2 className="title-name">{text}</h2>
-          <PostList mainPosts={mainPosts} />
+          <Posts mainPosts={mainPosts} />
         </div>
       </AppLayout>
 
@@ -103,16 +83,10 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   // console.log("etc$% ", etc.params);
   const { text } = etc.params;
   console.log("text : ", text);
-  if (text) {
-    store.dispatch({
-      type: LOAD_SEARCH_POSTS_REQUEST,
-      data: { text }
-    });
-  } else {
-    store.dispatch({
-      type: LOAD_POSTS_REQUEST
-    });
-  }
+  store.dispatch({
+    type: LOAD_HASHTAG_POSTS_REQUEST,
+    data: { text }
+  });
 
   store.dispatch({
     type: LOAD_CATEGORYS_REQUEST

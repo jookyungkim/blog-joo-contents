@@ -1,28 +1,26 @@
 const DataTypes = require("sequelize");
 const { Model } = DataTypes;
 
-module.exports = class Tag extends Model {
+module.exports = class Like extends Model {
   static init(sequelize) {
     return super.init(
       {
-        keyword: {
+        ip: {
           type: DataTypes.STRING(20),
           allowNull: false,
         },
       },
       {
-        modelName: "Hashtag",
-        tableName: "hashtags",
+        modelName: "Like",
+        tableName: "Likes",
         charset: "utf8mb4",
-        collate: "utf8mb4_general_ci",
+        collate: "utf8mb4_general_ci", // 이모티콘 한글저장
         sequelize,
       }
     );
   }
-  static associzte(db) {
-    db.Hashtag.belongsToMany(db.Post, {
-      as: "postHashtags",
-      through: "postHashtag",
-    });
+
+  static associate(db) {
+    db.Like.belongsTo(db.Post);
   }
 };

@@ -1,14 +1,28 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { END } from "redux-saga";
 import DOMPurify from "isomorphic-dompurify";
 import styled from "styled-components";
+// import requestIp from "request-ip";
+import ip from "ip";
+import publicIp from "react-public-ip";
 
 import wrapper from "../../store/configureStore";
-import { LOAD_POST_REQUEST } from "../../reducers/post";
+import {
+  LOAD_POST_REQUEST,
+  IS_LIKE_REQUEST,
+  LIKE_REQUEST,
+  UNLIKE_REQUEST,
+  LOAD_LINK_POSTS_REQUEST,
+  REMOVE_POST_REQUEST
+} from "../../reducers/post";
+import { LOAD_COMMENTS_REQUEST } from "../../reducers/comment";
+
+import CustomSubDetailView from "../../components/CustomSubDetailView";
+import CommentForm from "../../components/CommentForm";
 
 const CustomEditorView = styled.div`
   img {
@@ -16,15 +30,61 @@ const CustomEditorView = styled.div`
   }
 `;
 
+// const CustomSubDetailView = styled.div`
+
+// `;
+
+// const ipv4 = (await publicIp.v4()) || "";
+
 const postView = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
+  const postId = parseInt(id, 10);
   const ref = useRef(null);
 
-  const singlePost = useSelector(state => state.post.singlePost);
-  const { Images, Hashtags } = singlePost;
-  // console.log("singlePost ", singlePost);
+  const { singlePost, isLike, subLinkPosts, removePostDone } = useSelector(state => state.post);
+  const { Images, postHashtags } = singlePost;
   const firstSrc = Images[0]?.src;
+
+  useEffect(() => {
+    if (removePostDone) {
+      Router.replace("/");
+    }
+  }, [removePostDone]);
+
+  const likeHandler = useCallback(() => {
+    if (isLike) {
+      dispatch({
+        type: UNLIKE_REQUEST,
+        data: postId
+      });
+    } else {
+      dispatch({
+        type: LIKE_REQUEST,
+        data: postId
+      });
+    }
+  }, [isLike]);
+
+  const updateHandler = useCallback(
+    e => {
+      Router.replace(`/postModify/${id}`);
+    },
+    [id]
+  );
+
+  const removeHandler = useCallback(
+    e => {
+      if (window.confirm("삭제하시겠습니까?")) {
+        dispatch({
+          type: REMOVE_POST_REQUEST,
+          data: { id: postId }
+        });
+      }
+    },
+    [postId]
+  );
 
   return (
     <>
@@ -41,12 +101,18 @@ const postView = () => {
             <div className="postView-main">
               <div className="button-group">
                 <div className="button-like-group">
-                  <button className="common-button">좋아요</button>
-                  <button className="common-button">신고하기</button>
+                  <button className="common-button" onClick={likeHandler}>
+                    좋아요
+                  </button>
+                  {/* <button className="common-button">신고하기</button> */}
                 </div>
                 <div className="button-status-group">
-                  <button className="common-button">수정</button>
-                  <button className="common-button">삭제</button>
+                  <button className="common-button" onClick={updateHandler}>
+                    수정
+                  </button>
+                  <button className="common-button" onClick={removeHandler}>
+                    삭제
+                  </button>
                 </div>
               </div>
               <div className="beforeAfter-link-group">
@@ -57,44 +123,17 @@ const postView = () => {
                 </div> */}
                 <hr />
                 <div className="beforeAfter-list">
-                  <div className="beforeAfter-detail">
-                    <a href="#none" className="beforeAfter-link">
-                      <div className="beforAfter-link-text">
-                        <span>input 태그의 type 속성 종류와 예제</span>
-                        <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      </div>
-                    </a>
-                  </div>
-                  <div className="beforeAfter-detail">
-                    <a href="#none" className="beforeAfter-link">
-                      <div className="beforAfter-link-text">
-                        <span>input 태그의 type 속성 종류와 예제</span>
-                        <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      </div>
-                    </a>
-                  </div>
-                  <div className="beforeAfter-detail">
-                    <a href="#none" className="beforeAfter-link">
-                      <div className="beforAfter-link-text">
-                        <span>input 태그의 type 속성 종류와 예제</span>
-                        <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      </div>
-                    </a>
-                  </div>
-                  <div className="beforeAfter-detail">
-                    <a href="#none" className="beforeAfter-link">
-                      <div className="beforAfter-link-text">
-                        <span>input 태그의 type 속성 종류와 예제</span>
-                        <i className="fa fa-long-arrow-right" aria-hidden="true" />
-                      </div>
-                    </a>
-                  </div>
+                  {subLinkPosts.map((post, index) => (
+                    <div key={post.id} className="beforeAfter-detail">
+                      <CustomSubDetailView postId={post.id} title={post.title} isConnext={post.id === postId} />
+                    </div>
+                  ))}
                 </div>
                 <hr />
               </div>
               <div className="tag-group">
-                {Hashtags.map(tag => (
-                  <Link key={tag.id} href={`/posts/${tag.keyword}`}>
+                {postHashtags.map(tag => (
+                  <Link key={tag.id} href={`/posts/tags/${tag.keyword}`}>
                     <a>{tag.keyword}</a>
                   </Link>
                 ))}
@@ -102,7 +141,8 @@ const postView = () => {
             </div>
             <div className="serve-wrapper">
               <div className="commentShare-wrapper">
-                <div className="comment-wrapper">
+                <CommentForm postId={postId} />
+                {/* <div className="comment-wrapper">
                   <div className="comment-form">
                     <h3>댓글</h3>
                     <textarea name="comment" id="" cols="55" rows="8" placeholder="입력하세요"></textarea>
@@ -116,39 +156,57 @@ const postView = () => {
                       </button>
                     </div>
                   </div>
-                </div>
+                  <div className="comment-list-group">
+                    <div className="comment-list">
+                      <div className="comment-parent">
+                        <i className="fa fa-chevron-circle-right" aria-hidden="true" />
+                        <span>html이 브라우저로 돌아가는거 보면 신기해요</span>
+                      </div>
+                      <div className="comment-child">
+                        <i className="fa fa-chevron-circle-left" aria-hidden="true" />
+                        <span>[쿠카]</span>
+                        <span>그쵸ㅎㅎ 저도 공부하면서 너무 신기했어요!</span>
+                      </div>
+                      <div className="comment-child">
+                        <i className="fa fa-chevron-circle-left" aria-hidden="true" />
+                        <span>[조로]</span>
+                        <span> 많은것을 알게되서 기뻐요 ㅎㅎ</span>
+                      </div>
+                    </div>
+                  </div>
+                </div> */}
                 <div className="share-wrapper">
                   <div className="share-group">
                     <h3>공유하기</h3>
                     <div className="share-link-list">
-                      <a href="#none">네이버</a>
-                      <a href="#none">카카오톡</a>
-                      <a href="#none">트위터</a>
-                      <a href="#none">밴드</a>
-                      <a href="#none">페이스북</a>
-                      <a href="#none">페이스북</a>
-                      <a href="#none">페이스북</a>
-                      <a href="#none">페이스북</a>
-                      <a href="#none">페이스북</a>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        네이버
+                      </button>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        카카오톡
+                      </button>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        트위터
+                      </button>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        밴드
+                      </button>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        페이스북
+                      </button>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        페이스북
+                      </button>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        페이스북
+                      </button>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        페이스북
+                      </button>
+                      <button href="#none" type="button" onClick={() => alert("준비중입니다.")}>
+                        페이스북
+                      </button>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div className="comment-list-group">
-                <div className="comment-list">
-                  <div className="comment-parent">
-                    <i className="fa fa-chevron-circle-right" aria-hidden="true" />
-                    <span>html이 브라우저로 돌아가는거 보면 신기해요</span>
-                  </div>
-                  <div className="comment-child">
-                    <i className="fa fa-chevron-circle-left" aria-hidden="true" />
-                    <span>[쿠카]</span>
-                    <span>그쵸ㅎㅎ 저도 공부하면서 너무 신기했어요!</span>
-                  </div>
-                  <div className="comment-child">
-                    <i className="fa fa-chevron-circle-left" aria-hidden="true" />
-                    <span>[조로]</span>
-                    <span> 많은것을 알게되서 기뻐요 ㅎㅎ</span>
                   </div>
                 </div>
               </div>
@@ -207,6 +265,7 @@ const postView = () => {
 
         .postView-wrapper .postView-main .button-group .button-like-group .common-button {
           margin-right: 5px;
+          background-color: ${isLike ? "#e74c3c" : null};
         }
 
         .postView-wrapper .postView-main .button-group .button-status-group {
@@ -245,7 +304,7 @@ const postView = () => {
           margin: 5px 0;
         }
 
-        .postView-wrapper
+        /* .postView-wrapper
           .postView-main
           .beforeAfter-link-group
           .beforeAfter-list
@@ -253,9 +312,9 @@ const postView = () => {
           .beforeAfter-link {
           display: block;
           width: 100%;
-        }
+        } */
 
-        .postView-wrapper
+        /* .postView-wrapper
           .postView-main
           .beforeAfter-link-group
           .beforeAfter-list
@@ -269,7 +328,7 @@ const postView = () => {
           -ms-flex-pack: justify;
           justify-content: space-between;
           width: 90%;
-        }
+        } */
 
         .postView-wrapper .postView-main .tag-group {
           display: -webkit-box;
@@ -297,7 +356,7 @@ const postView = () => {
           display: flex;
         }
 
-        .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper {
+        /* .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper {
           -webkit-box-flex: 1;
           -ms-flex: 1;
           flex: 1;
@@ -385,7 +444,7 @@ const postView = () => {
           button
           i {
           font-size: 1.5em;
-        }
+        } */
 
         .postView-wrapper .serve-wrapper .commentShare-wrapper .share-wrapper {
           -webkit-box-flex: 1;
@@ -413,16 +472,18 @@ const postView = () => {
           flex-wrap: wrap;
         }
 
-        .postView-wrapper .serve-wrapper .commentShare-wrapper .share-wrapper .share-group .share-link-list a {
+        .postView-wrapper .serve-wrapper .commentShare-wrapper .share-wrapper .share-group .share-link-list button {
           border: 1px solid #eeeeee;
           border-radius: 0.5rem;
           margin-right: 10px;
           padding: 0.7em 0.7em;
           background-color: #3498db;
           margin-bottom: 10px;
+          padding: 15px 10px;
+          font-weight: 300;
         }
 
-        .postView-wrapper .serve-wrapper .comment-list-group {
+        /* .postView-wrapper .serve-wrapper .comment-list-group {
           margin-top: 15px;
         }
 
@@ -441,7 +502,7 @@ const postView = () => {
 
         .postView-wrapper .serve-wrapper .comment-list-group .comment-list .comment-child i {
           margin-right: 8px;
-        }
+        } */
 
         @media (min-width: 335px) and (max-width: 757px) {
           .slider-form {
@@ -482,11 +543,12 @@ const postView = () => {
             -webkit-box-direction: normal;
             -ms-flex-direction: column;
             flex-direction: column;
+            /* flex-direction: column-reverse; */
           }
-          .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper .comment-form textarea {
+          /* .postView-wrapper .serve-wrapper .commentShare-wrapper .comment-wrapper .comment-form textarea {
             width: 90%;
             overflow: hidden;
-          }
+          } */
         }
         /*# sourceMappingURL=style.css.map */
       `}</style>
@@ -508,10 +570,27 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   // const { name } = router.query;
   // console.log("etc$% ", etc.params);
   const { id } = etc.params;
+  const postId = id;
 
   store.dispatch({
     type: LOAD_POST_REQUEST,
-    data: id
+    data: postId
+  });
+
+  // console.log(" ip**** ", ipv);
+  store.dispatch({
+    type: IS_LIKE_REQUEST,
+    data: postId
+  });
+
+  store.dispatch({
+    type: LOAD_LINK_POSTS_REQUEST,
+    data: { id: postId, offset: 2, limit: 4 }
+  });
+
+  store.dispatch({
+    type: LOAD_COMMENTS_REQUEST,
+    data: { postId }
   });
 
   store.dispatch(END);
