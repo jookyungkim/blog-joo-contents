@@ -1,8 +1,12 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const { Op } = require("sequelize");
 const passport = require("passport");
-const { User } = require("../models");
+const { User, Visitant } = require("../models");
+const { getUserIP } = require("../utill");
+const moment = require("moment");
 
+const today = moment();
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
@@ -70,6 +74,117 @@ router.get("/loadMyInfo", async (req, res, next) => {
     } else {
       return res.status(200).json(null);
     }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post("/visitant", async (req, res, next) => {
+  // POST /user/visitant
+  const ip = getUserIP(req);
+  try {
+    const cloneToDate = today.clone();
+    cloneToDate.startOf("day").fromNow(); // 2022-04-12 00:00:00
+    // console.log(today);
+    // console.log();
+
+    const visitant = await Visitant.findOne({
+      where: {
+        ip,
+        createdAt: {
+          [Op.lte]: today, // <=
+          [Op.gte]: cloneToDate, // >=
+        },
+      },
+    });
+
+    if (!visitant) {
+      await Visitant.create({
+        ip,
+        createdAt: today,
+      });
+    }
+
+    const listCount = [];
+    const fullCount = await Visitant.count({});
+    const todayCount = await Visitant.count({
+      where: {
+        createdAt: {
+          [Op.lte]: today, // <=
+          [Op.gte]: cloneToDate, // >=
+        },
+      },
+    });
+
+    const yesterday = today.clone(); // 2022-04-12 00:00:00
+    yesterday.subtract(1, "days");
+    yesterday.endOf("day").fromNow();
+
+    const yesterday2 = today.clone(); // 2022-04-12 23:59:59
+    yesterday2.subtract(1, "days");
+    yesterday2.startOf("day").fromNow();
+
+    const yesterdayCount = await Visitant.count({
+      where: {
+        createdAt: {
+          [Op.lte]: yesterday, // <=
+          [Op.gte]: yesterday2, // >=
+        },
+      },
+    });
+
+    listCount.push(fullCount);
+    listCount.push(todayCount);
+    listCount.push(yesterdayCount);
+
+    return res.status(200).json(listCount);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/visitantCount", async (req, res, next) => {
+  // GET /user/visitantCount
+
+  try {
+    const listCount = [];
+    const fullCount = await Visitant.count({});
+
+    const cloneToDate = today.clone();
+    cloneToDate.startOf("day").fromNow(); // 2022-04-12 00:00:00
+    const todayCount = await Visitant.count({
+      where: {
+        createdAt: {
+          [Op.lte]: today, // <=
+          [Op.gte]: cloneToDate, // >=
+        },
+      },
+    });
+
+    const yesterday = today.clone(); // 2022-04-12 00:00:00
+    yesterday.subtract(1, "days");
+    yesterday.endOf("day").fromNow();
+
+    const yesterday2 = today.clone(); // 2022-04-12 23:59:59
+    yesterday2.subtract(1, "days");
+    yesterday2.startOf("day").fromNow();
+
+    const yesterdayCount = await Visitant.count({
+      where: {
+        createdAt: {
+          [Op.lte]: yesterday, // <=
+          [Op.gte]: yesterday2, // >=
+        },
+      },
+    });
+
+    listCount.push(fullCount);
+    listCount.push(todayCount);
+    listCount.push(yesterdayCount);
+
+    return res.status(200).json(listCount);
   } catch (error) {
     console.error(error);
     next(error);

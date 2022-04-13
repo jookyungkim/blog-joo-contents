@@ -7,7 +7,7 @@ import { END } from "redux-saga";
 
 import wrapper from "../../../store/configureStore";
 import AppLayout from "../../../components/AppLayout";
-import Posts from "../../../components/Posts";
+import Posts from "../../../components/PostList";
 import { LOAD_HASHTAG_POSTS_REQUEST } from "../../../reducers/post";
 import { LOAD_CATEGORYS_REQUEST } from "../../../reducers/category";
 

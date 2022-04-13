@@ -8,7 +8,7 @@ import AppLayout from "../components/AppLayout";
 import PostList from "../components/PostList";
 import Slider from "../components/Slider";
 import wrapper from "../store/configureStore";
-import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import { LOAD_MY_INFO_REQUEST, ADD_VISITANT_REQUEST } from "../reducers/user";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
 import { LOAD_CATEGORYS_REQUEST } from "../reducers/category";
 
@@ -87,6 +87,10 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   }
 
   // console.log("index getServerSideProps 흐름 확인");
+  store.dispatch({
+    type: ADD_VISITANT_REQUEST
+  });
+
   store.dispatch({
     type: LOAD_MY_INFO_REQUEST
   });

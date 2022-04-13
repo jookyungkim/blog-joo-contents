@@ -5,6 +5,7 @@ const useInput = (initialvalue = null) => {
   const handler = useCallback(e => {
     // e.preventDefault();
     setValue(e.target.value);
+    // console.log("value : ", value);
   }, []);
   return [value, handler, setValue];
 };

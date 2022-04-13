@@ -4,8 +4,7 @@ const passport = require("passport");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const ip = require("ip");
-// const requestIp = require("request-ip");
+const { getUserIP } = require("../utill");
 
 const {
   Post,
@@ -160,14 +159,6 @@ router.post("/", async (req, res, next) => {
     next(error);
   }
 });
-
-function getUserIP(req) {
-  let addr = ip.address();
-  if (process.env.NODE_ENV === "production") {
-    addr = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  }
-  return addr;
-}
 
 router.post("/:postId/unlike", async (req, res, next) => {
   // POST /post/1/like

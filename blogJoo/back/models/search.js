@@ -9,6 +9,10 @@ module.exports = class Search extends Model {
           type: DataTypes.TEXT,
           allowNull: false,
         },
+        ip: {
+          type: DataTypes.STRING(20),
+          allowNull: false,
+        },
       },
       {
         modelName: "Search",

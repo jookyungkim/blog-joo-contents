@@ -5,6 +5,8 @@ import user from "./user";
 import post from "./post";
 import category from "./category";
 import comment from "./comment";
+import search from "./search";
+import hashtag from "./hashtag";
 
 // (이전상태, 액션) => 다음상태
 // combineReducers는 rudux들을 합처준다.
@@ -19,7 +21,9 @@ const rootReducer = (state, action) => {
         user,
         post,
         category,
-        comment
+        comment,
+        search,
+        hashtag
       });
       return combindedReducer(state, action);
     }

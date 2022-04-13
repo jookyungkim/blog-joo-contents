@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { mainCategorys } = useSelector(state => state.category);
+  const { visitantCounts } = useSelector(state => state.user);
 
   return (
     <>
@@ -20,17 +21,17 @@ const Nav = () => {
               <div className="visitant">
                 <div className="visitant-detail">
                   <h4>
-                    전체 방문자<span>10명</span>
+                    전체 방문자<span>{visitantCounts[0]}명</span>
                   </h4>
                 </div>
                 <div className="visitant-detail">
                   <h4>
-                    어제<span>5명</span>
+                    오늘 <span>{visitantCounts[1]}명</span>
                   </h4>
                 </div>
                 <div className="visitant-detail">
                   <h4>
-                    전체 방문자<span>10명</span>
+                    어제 <span>{visitantCounts[2]}명</span>
                   </h4>
                 </div>
               </div>

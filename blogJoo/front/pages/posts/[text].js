@@ -18,15 +18,6 @@ const Post = props => {
   const dispatch = useDispatch();
   const { mainPosts, hasMorePosts, loadPostsLoading, loadSearchPostsLoading } = useSelector(state => state.post);
 
-  // useEffect(() => {
-  //   if (!loadSearchPostsLoading && text) {
-  //     dispatch({
-  //       type: LOAD_SEARCH_POSTS_REQUEST,
-  //       data: { text: text }
-  //     });
-  //   }
-  // }, [loadSearchPostsLoading, text]);
-
   useEffect(
     () => {
       function onScroll() {

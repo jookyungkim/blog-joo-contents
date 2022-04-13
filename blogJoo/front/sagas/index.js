@@ -4,6 +4,8 @@ import userSaga from "./user";
 import postSaga from "./post";
 import categorySaga from "./category";
 import commentSaga from "./comment";
+import searchSaga from "./search";
+import hashtagSaga from "./hashtag";
 
 import { backUrl } from "../config/config";
 
@@ -27,5 +29,12 @@ axios.defaults.withCredentials = true;
  */
 
 export default function* rootSaga() {
-  yield all([fork(userSaga), fork(postSaga), fork(categorySaga), fork(commentSaga)]);
+  yield all([
+    fork(userSaga),
+    fork(postSaga),
+    fork(categorySaga),
+    fork(commentSaga),
+    fork(searchSaga),
+    fork(hashtagSaga)
+  ]);
 }

@@ -9,6 +9,12 @@ module.exports = {
     database: "react_nodejoo",
     host: "127.0.0.1",
     dialect: "mysql",
+    timezone: "Asia/Seoul",
+    dialectOptions: {
+      charset: "utf8mb4",
+      dateStrings: true,
+      typeCast: true,
+    },
   },
   test: {
     username: "root",
@@ -16,6 +22,12 @@ module.exports = {
     database: "react_nodejoo",
     host: "127.0.0.1",
     dialect: "mysql",
+    timezone: "Asia/Seoul",
+    dialectOptions: {
+      charset: "utf8mb4",
+      dateStrings: true,
+      typeCast: true,
+    },
   },
   production: {
     username: "root",
@@ -23,5 +35,11 @@ module.exports = {
     database: "react_nodejoo",
     host: "127.0.0.1",
     dialect: "mysql",
+    timezone: "Asia/Seoul",
+    dialectOptions: {
+      charset: "utf8mb4",
+      dateStrings: true,
+      typeCast: true,
+    },
   },
 };

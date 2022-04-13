@@ -29,6 +29,6 @@ function* watchCategorys() {
   yield takeLatest(LOAD_CATEGORYS_REQUEST, categorys);
 }
 
-export default function* postSaga() {
+export default function* categorySaga() {
   yield all([fork(watchCategorys)]);
 }
