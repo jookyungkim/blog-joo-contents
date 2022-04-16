@@ -63,6 +63,8 @@ const PostCard = ({ post }) => {
   );
 };
 
-PostCard.propTypes = {};
+PostCard.propTypes = {
+  post: PropTypes.object.isRequired
+};
 
 export default PostCard;

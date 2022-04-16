@@ -20,6 +20,7 @@ router.get("/", async (req, res, next) => {
       where,
       limit: 10,
       order: [
+        ["id", "DESC"],
         ["createdAt", "DESC"],
         // [Comment, "createdAt", "DESC"],
       ],
@@ -78,7 +79,10 @@ router.get("/:text", async (req, res, next) => {
       postFull = await Post.findAll({
         where,
         limit: 10,
-        order: [["createdAt", "DESC"]],
+        order: [
+          ["id", "DESC"],
+          ["createdAt", "DESC"],
+        ],
         include: [
           {
             model: Category,
@@ -101,7 +105,10 @@ router.get("/:text", async (req, res, next) => {
       postFull = await Post.findAll({
         where,
         limit: 10,
-        order: [["createdAt", "DESC"]],
+        order: [
+          ["id", "DESC"],
+          ["createdAt", "DESC"],
+        ],
         include: [
           {
             model: Category,
@@ -151,7 +158,10 @@ router.get("/tag/:keyword", async (req, res, next) => {
     const posts = await Post.findAll({
       where,
       limit: 10,
-      order: [["createdAt", "DESC"]],
+      order: [
+        ["id", "DESC"],
+        ["createdAt", "DESC"],
+      ],
       include: [
         {
           model: Hashtag,
@@ -187,9 +197,9 @@ router.get("/sub/linkPages", async (req, res, next) => {
   // req.query.offset    2
   console.log("subLinkPages : ", req.query);
   // return res.status(200).json(false);
-  const targetId = parseInt(req.query.targetId);
-  const limit = parseInt(req.query.limit);
-  let offset = parseInt(req.query.offset);
+  const targetId = parseInt(req.query.targetId, 10);
+  const limit = parseInt(req.query.limit, 10);
+  let offset = parseInt(req.query.offset, 10);
 
   try {
     const where = {};
@@ -207,7 +217,7 @@ router.get("/sub/linkPages", async (req, res, next) => {
     const posts = await Post.findAll({
       where,
       limit: limit,
-      order: [["createdAt", "ASC"]],
+      order: [["id", "ASC"]],
       include: [
         {
           model: User,
@@ -217,6 +227,30 @@ router.get("/sub/linkPages", async (req, res, next) => {
     });
 
     res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+router.get("/images/slider", async (req, res, next) => {
+  // GET /posts/images/slider
+  // console.log("동작 확인");
+  try {
+    const postFull = await Post.findAll({
+      limit: parseInt(req.query.limit, 10),
+      order: [
+        ["id", "DESC"],
+        ["createdAt", "DESC"],
+      ],
+      include: [
+        {
+          model: Image,
+        },
+      ],
+    });
+
+    res.status(200).json(postFull);
   } catch (error) {
     console.log(error);
     next(error);

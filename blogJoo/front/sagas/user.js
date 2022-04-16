@@ -12,7 +12,10 @@ import {
   LOAD_MY_INFO_FAILURE,
   ADD_VISITANT_REQUEST,
   ADD_VISITANT_SUCCESS,
-  ADD_VISITANT_FAILURE
+  ADD_VISITANT_FAILURE,
+  LOAD_VISITANT_COUNTS_REQUEST,
+  LOAD_VISITANT_COUNTS_SUCCESS,
+  LOAD_VISITANT_COUNTS_FAILURE
 } from "../reducers/user";
 
 function logInAPI(data) {
@@ -96,6 +99,26 @@ function* addVisitant() {
   }
 }
 
+function loadVisitantCountsAPI() {
+  return axios.get("/user/visitantCount");
+}
+
+function* loadVisitantCounts() {
+  try {
+    const result = yield call(loadVisitantCountsAPI);
+    yield put({
+      type: LOAD_VISITANT_COUNTS_SUCCESS,
+      data: result.data
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_VISITANT_COUNTS_FAILURE,
+      error: err.response.data
+    });
+  }
+}
+
 function* watchLogin() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
 }
@@ -112,6 +135,16 @@ function* watchAddVisitant() {
   yield takeLatest(ADD_VISITANT_REQUEST, addVisitant);
 }
 
+function* watchLoadVisitantCounts() {
+  yield takeLatest(LOAD_VISITANT_COUNTS_REQUEST, loadVisitantCounts);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchLogOut), fork(watchLoadMyInfo), fork(watchAddVisitant)]);
+  yield all([
+    fork(watchLogin),
+    fork(watchLogOut),
+    fork(watchLoadMyInfo),
+    fork(watchAddVisitant),
+    fork(watchLoadVisitantCounts)
+  ]);
 }

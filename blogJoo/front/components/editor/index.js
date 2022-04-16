@@ -1,5 +1,6 @@
 import React, { useRef, useMemo } from "react";
 import ReactQuill, { Quill } from "react-quill";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import Head from "next/head";
 
@@ -149,6 +150,10 @@ const Editor = ({ text, handleChange }) => {
       <style jsx>{``}</style>
     </>
   );
+};
+Editor.propTypes = {
+  // text: PropTypes.string.isRequired,
+  // handleChange: PropTypes.array.isRequired
 };
 
 export default Editor;

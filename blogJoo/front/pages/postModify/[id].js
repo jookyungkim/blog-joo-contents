@@ -7,7 +7,9 @@ import { END } from "redux-saga";
 
 import wrapper from "../../store/configureStore";
 import userInput from "../../hooks/useInput";
+import { LOAD_MY_INFO_REQUEST, ADD_VISITANT_REQUEST } from "../../reducers/user";
 import { LOAD_POST_REQUEST, UPDATE_POST_REQUEST } from "../../reducers/post";
+import CustomReactLoading from "../../components/CustomReactLoading";
 
 const Editor = dynamic(
   async () => {
@@ -25,13 +27,21 @@ const postModify = () => {
   const { id } = router.query;
   const postId = parseInt(id, 10);
 
+  const { me } = useSelector(state => state.user);
   const { singlePost, updatePostDone, updatePostError } = useSelector(state => state.post);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (updatePostDone) {
+    if (!me) {
+      setIsLoading(true);
       Router.replace("/");
     }
-  }, [updatePostDone]);
+
+    if (updatePostDone) {
+      setIsLoading(true);
+      Router.replace("/");
+    }
+  }, [updatePostDone, me, isLoading]);
 
   useEffect(() => {
     if (updatePostError) {
@@ -40,16 +50,22 @@ const postModify = () => {
   }, [updatePostError]);
 
   const [comboBox, setComboBox] = useState();
-  const onChangeComboBox = useCallback(e => {
-    // console.log("comboBox value", e.target.value);
-    setComboBox(e.target.value);
-  }, []);
+  const onChangeComboBox = useCallback(
+    e => {
+      // console.log("comboBox value", e.target.value);
+      setComboBox(e.target.value);
+    },
+    [comboBox]
+  );
 
   const [title, setTitle] = useState();
-  const titleHandler = useCallback(e => {
-    // console.log("comboBox value", e.target.value);
-    setTitle(e.target.value);
-  }, []);
+  const titleHandler = useCallback(
+    e => {
+      // console.log("comboBox value", e.target.value);
+      setTitle(e.target.value);
+    },
+    [title]
+  );
 
   const [content, setContent] = useState();
   const handleChange = useCallback(
@@ -70,6 +86,18 @@ const postModify = () => {
     e => {
       e.preventDefault();
       // console.log("content !@# ", content);
+
+      if (!me) {
+        return alert("회원정보가 없습니다.");
+      }
+
+      if (!title) {
+        return alert("타이틀은 필수 항목입니다.");
+      }
+
+      if (!content) {
+        return alert("게시글을 작성해 주세요");
+      }
       dispatch({
         type: UPDATE_POST_REQUEST,
         data: { id: postId, content, title, comboBox }
@@ -79,11 +107,13 @@ const postModify = () => {
   );
 
   const cancelButton = useCallback(() => {
+    setIsLoading(true);
     Router.replace("/");
-  }, []);
+  }, [isLoading]);
 
   return (
     <>
+      {isLoading && <CustomReactLoading type={"spin"} color={"#222f3e"} />}
       <div className="register-container">
         <div className="register-inner">
           <h3>재미있는 코딩 스토리~</h3>
@@ -103,14 +133,16 @@ const postModify = () => {
             <div className="aditerBox">
               <Editor text={content} handleChange={handleChange} />
             </div>
-            <div className="button-group">
-              <button className="common-button" type="submit">
-                수정
-              </button>
-              <button className="common-button" type="button" onClick={cancelButton}>
-                취소
-              </button>
-            </div>
+            {me && (
+              <div className="button-group">
+                <button className="common-button" type="submit">
+                  수정
+                </button>
+                <button className="common-button" type="button" onClick={cancelButton}>
+                  취소
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>
@@ -226,6 +258,14 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   if (req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
+
+  store.dispatch({
+    type: LOAD_MY_INFO_REQUEST
+  });
+
+  store.dispatch({
+    type: ADD_VISITANT_REQUEST
+  });
 
   const { id } = etc.params;
   const postId = id;

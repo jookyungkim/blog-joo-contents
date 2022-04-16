@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import Head from "next/head";
@@ -7,16 +7,32 @@ import { END } from "redux-saga";
 
 import wrapper from "../../../store/configureStore";
 import AppLayout from "../../../components/AppLayout";
-import Posts from "../../../components/PostList";
+import PostList from "../../../components/PostList";
+import { LOAD_MY_INFO_REQUEST, ADD_VISITANT_REQUEST, LOAD_VISITANT_COUNTS_REQUEST } from "../../../reducers/user";
 import { LOAD_HASHTAG_POSTS_REQUEST } from "../../../reducers/post";
 import { LOAD_CATEGORYS_REQUEST } from "../../../reducers/category";
+import CustomReactLoading from "../../../components/CustomReactLoading";
 
 const Post = props => {
   const router = useRouter();
   const { text } = router.query;
 
   const dispatch = useDispatch();
-  const { mainPosts, hasMorePosts, loadHashtagPostsLoading } = useSelector(state => state.post);
+  const { mainPosts, hasMorePosts, loadHashtagPostsLoading, loadHashtagPostsDone } = useSelector(state => state.post);
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    if (mainPosts.length === 0 && !loadHashtagPostsDone) {
+      dispatch({
+        type: LOAD_HASHTAG_POSTS_REQUEST,
+        data: { text }
+      });
+    }
+  }, [mainPosts, loadHashtagPostsDone, text]);
+
+  useEffect(() => {
+    if (loadHashtagPostsLoading) setIsLoading(true);
+    else setIsLoading(false);
+  }, [isLoading, loadHashtagPostsLoading]);
 
   useEffect(
     () => {
@@ -48,13 +64,14 @@ const Post = props => {
 
   return (
     <>
+    {isLoading && <CustomReactLoading type={"spin"} color={"#222f3e"} />}
       <AppLayout>
         <Head>
-          <title>{text}</title>
+          <title>태그 : {text}</title>
         </Head>
         <div className="main-inner">
-          <h2 className="title-name">{text}</h2>
-          <Posts mainPosts={mainPosts} />
+          <h2 className="title-name">태그 : {text}</h2>
+          <PostList mainPosts={mainPosts} loadPostsLoading={loadHashtagPostsLoading} />
         </div>
       </AppLayout>
 
@@ -78,20 +95,27 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   if (req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  // const router = useRouter();
-  // const { name } = router.query;
-  // console.log("etc$% ", etc.params);
-  const { text } = etc.params;
-  console.log("text : ", text);
   store.dispatch({
-    type: LOAD_HASHTAG_POSTS_REQUEST,
-    data: { text }
+    type: LOAD_MY_INFO_REQUEST
+  });
+
+  store.dispatch({
+    type: ADD_VISITANT_REQUEST
+  });
+
+  store.dispatch({
+    type: LOAD_VISITANT_COUNTS_REQUEST
   });
 
   store.dispatch({
     type: LOAD_CATEGORYS_REQUEST
   });
 
+  // const router = useRouter();
+  // const { name } = router.query;
+  // console.log("etc$% ", etc.params);
+  // const { text } = etc.params;
+  // console.log("text : ", text);
   store.dispatch(END);
   await store.sagaTask.toPromise();
 });

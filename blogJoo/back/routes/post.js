@@ -15,6 +15,7 @@ const {
   Category,
   Like,
 } = require("../models");
+const { isLoggedIn, isNotLoggedIn } = require("./mddlewares");
 
 const router = express.Router();
 
@@ -105,7 +106,7 @@ router.get("/:postId", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", isLoggedIn, async (req, res, next) => {
   // POST /post
   // console.log("comboBox : ", req.body.comboBox);
   try {
@@ -120,7 +121,7 @@ router.post("/", async (req, res, next) => {
     const post = await Post.create({
       content: req.body.content,
       title: req.body.title,
-      //UserId: req.user.id,
+      UserId: req.user.id,
     });
 
     post.addCategoryPosts(category.id);
@@ -137,7 +138,7 @@ router.post("/", async (req, res, next) => {
         )
       );
 
-      await post.addHashtags(result.map((v) => v[0]));
+      await post.addPostHashtags(result.map((v) => v[0]));
     }
 
     const regex = /(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/gi;
@@ -163,7 +164,7 @@ router.post("/", async (req, res, next) => {
 router.post("/:postId/unlike", async (req, res, next) => {
   // POST /post/1/like
   const ip = getUserIP(req);
-  console.log("/unlike** ", req.body);
+  // console.log("/unlike** ", req.body);
 
   try {
     if (!ip) {
@@ -193,7 +194,7 @@ router.post("/:postId/like", async (req, res, next) => {
   // POST /post/1/like
 
   const ip = getUserIP(req);
-  console.log("like** ", ip);
+  // console.log("like** ", ip);
 
   try {
     if (!ip) {
@@ -227,7 +228,7 @@ router.post("/:postId/like", async (req, res, next) => {
 router.post("/:postId/isLike", async (req, res, next) => {
   // POST /post/1/isLike
   const ip = getUserIP(req);
-  console.log("isLike** ", ip);
+  // console.log("isLike** ", ip);
 
   // return res.status(200).json(ip);
   try {
@@ -254,7 +255,7 @@ router.post("/:postId/isLike", async (req, res, next) => {
   }
 });
 
-router.delete("/:postId", async (req, res, next) => {
+router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   // DELETE /post/1
   try {
     await Post.destroy({
@@ -267,7 +268,7 @@ router.delete("/:postId", async (req, res, next) => {
   }
 });
 
-router.patch("/:postId", async (req, res, next) => {
+router.patch("/:postId", isLoggedIn, async (req, res, next) => {
   // PATCH /post/1
 
   try {
@@ -310,7 +311,7 @@ router.patch("/:postId", async (req, res, next) => {
         )
       );
 
-      await post.setHashtags(result.map((v) => v[0]));
+      await post.addPostHashtags(result.map((v) => v[0]));
     }
 
     const regex = /(<img[^>]*src\s*=\s*[\"']?([^>\"']+)[\"']?[^>]*>)/gi;

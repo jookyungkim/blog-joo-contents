@@ -6,6 +6,9 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   LOAD_POSTS_FAILURE,
+  LOAD_SLIDER_POSTS_REQUEST,
+  LOAD_SLIDER_POSTS_SUCCESS,
+  LOAD_SLIDER_POSTS_FAILURE,
   LOAD_HASHTAG_POSTS_REQUEST,
   LOAD_HASHTAG_POSTS_SUCCESS,
   LOAD_HASHTAG_POSTS_FAILURE,
@@ -57,6 +60,27 @@ function* loadPosts(action) {
     console.error(err);
     yield put({
       type: LOAD_POSTS_FAILURE,
+      error: err.response.data
+    });
+  }
+}
+
+function loadSliderPostsAPI(data) {
+  //console.log("lastId", lastId);
+  return axios.get(`/posts/images/slider?limit=${data.limit || 0}`); // lastId undefind 인경우 0으로 치환
+}
+
+function* loadSliderPosts(action) {
+  try {
+    const result = yield call(loadSliderPostsAPI, action.data);
+    yield put({
+      type: LOAD_SLIDER_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_SLIDER_POSTS_FAILURE,
       error: err.response.data
     });
   }
@@ -311,6 +335,10 @@ function* watchLoadPost() {
   yield takeLatest(LOAD_POST_REQUEST, loadPost);
 }
 
+function* watchLoadSliderPosts() {
+  yield takeLatest(LOAD_SLIDER_POSTS_REQUEST, loadSliderPosts);
+}
+
 function* watchLoadLinkPosts() {
   yield takeLatest(LOAD_LINK_POSTS_REQUEST, loadLinkPosts);
 }
@@ -346,6 +374,7 @@ function* watchUnLike() {
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
+    fork(watchLoadSliderPosts),
     fork(watchLoadPost),
     fork(watchLoadLinkPosts),
     fork(watchAddPost),

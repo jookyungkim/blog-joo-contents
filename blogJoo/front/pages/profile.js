@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import CustomReactLoading from "../components/CustomReactLoading";
 
 const profile = () => {
+  // useEffect(() => {
+  //   <CustomReactLoading type={"spin"} color="#222f3e" />;
+  // }, []);
+
   return (
     <>
       <div className="profile-container">
@@ -23,7 +28,7 @@ const profile = () => {
               </div>
             </div>
             <Link href="/login">
-              <a className="admin-link">관리자로그인</a>
+              <a className="admin-link">관리자</a>
             </Link>
           </div>
         </div>

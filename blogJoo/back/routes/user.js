@@ -5,6 +5,7 @@ const passport = require("passport");
 const { User, Visitant } = require("../models");
 const { getUserIP } = require("../utill");
 const moment = require("moment");
+const { isLoggedIn, isNotLoggedIn } = require("./mddlewares");
 
 const today = moment();
 const router = express.Router();
@@ -19,7 +20,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", isNotLoggedIn, async (req, res, next) => {
   // POST /login
 
   passport.authenticate("local", (err, user, info) => {
@@ -51,7 +52,7 @@ router.post("/login", async (req, res, next) => {
   })(req, res, next);
 });
 
-router.post("/logout", async (req, res, next) => {
+router.post("/logout", isLoggedIn, async (req, res, next) => {
   // POST /user/logout
 
   req.logout();
@@ -106,39 +107,7 @@ router.post("/visitant", async (req, res, next) => {
       });
     }
 
-    const listCount = [];
-    const fullCount = await Visitant.count({});
-    const todayCount = await Visitant.count({
-      where: {
-        createdAt: {
-          [Op.lte]: today, // <=
-          [Op.gte]: cloneToDate, // >=
-        },
-      },
-    });
-
-    const yesterday = today.clone(); // 2022-04-12 00:00:00
-    yesterday.subtract(1, "days");
-    yesterday.endOf("day").fromNow();
-
-    const yesterday2 = today.clone(); // 2022-04-12 23:59:59
-    yesterday2.subtract(1, "days");
-    yesterday2.startOf("day").fromNow();
-
-    const yesterdayCount = await Visitant.count({
-      where: {
-        createdAt: {
-          [Op.lte]: yesterday, // <=
-          [Op.gte]: yesterday2, // >=
-        },
-      },
-    });
-
-    listCount.push(fullCount);
-    listCount.push(todayCount);
-    listCount.push(yesterdayCount);
-
-    return res.status(200).json(listCount);
+    return res.status(200).send("ok");
   } catch (error) {
     console.error(error);
     next(error);

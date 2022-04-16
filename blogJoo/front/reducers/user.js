@@ -15,9 +15,9 @@ export const initialState = {
   addVisitantLoading: false,
   addVisitantDone: false,
   addVisitantError: false,
-  loadVisitantCountLoading: false,
-  loadVisitantCountDone: false,
-  loadVisitantCountError: false
+  loadVisitantCountsLoading: false,
+  loadVisitantCountsDone: false,
+  loadVisitantCountsError: false
 };
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
@@ -32,9 +32,9 @@ export const ADD_VISITANT_REQUEST = "ADD_VISITANT_REQUEST";
 export const ADD_VISITANT_SUCCESS = "ADD_VISITANT_SUCCESS";
 export const ADD_VISITANT_FAILURE = "ADD_VISITANT_FAILURE";
 
-export const LOAD_VISITANT_COUNT_REQUEST = "LOAD_VISITANT_COUNT_REQUEST";
-export const LOAD_VISITANT_COUNT_SUCCESS = "LOAD_VISITANT_COUNT_SUCCESS";
-export const LOAD_VISITANT_COUNT_FAILURE = "LOAD_VISITANT_COUNT_FAILURE";
+export const LOAD_VISITANT_COUNTS_REQUEST = "LOAD_VISITANT_COUNTS_REQUEST";
+export const LOAD_VISITANT_COUNTS_SUCCESS = "LOAD_VISITANT_COUNTS_SUCCESS";
+export const LOAD_VISITANT_COUNTS_FAILURE = "LOAD_VISITANT_COUNTS_FAILURE";
 
 export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
 export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
@@ -99,26 +99,25 @@ const reducer = (state = initialState, action) => {
         draft.addVisitantLoading = false;
         draft.addVisitantDone = true;
         draft.addVisitantError = false;
-        draft.visitantCounts = action.data;
         break;
       case ADD_VISITANT_FAILURE:
         draft.addVisitantLoading = false;
         draft.addVisitantError = action.error;
         break;
-      case LOAD_VISITANT_COUNT_REQUEST:
-        draft.loadVisitantCountLoading = true;
-        draft.loadVisitantCountDone = false;
-        draft.loadVisitantCountError = null;
+      case LOAD_VISITANT_COUNTS_REQUEST:
+        draft.loadVisitantCountsLoading = true;
+        draft.loadVisitantCountsDone = false;
+        draft.loadVisitantCountsError = null;
         break;
-      case LOAD_VISITANT_COUNT_SUCCESS:
-        draft.loadVisitantCountLoading = false;
-        draft.loadVisitantCountDone = true;
-        draft.loadVisitantCountError = false;
+      case LOAD_VISITANT_COUNTS_SUCCESS:
+        draft.loadVisitantCountsLoading = false;
+        draft.loadVisitantCountsDone = true;
+        draft.loadVisitantCountsError = false;
         draft.visitantCounts = action.data;
         break;
-      case LOAD_VISITANT_COUNT_FAILURE:
-        draft.loadVisitantCountLoading = false;
-        draft.loadVisitantCountError = action.error;
+      case LOAD_VISITANT_COUNTS_FAILURE:
+        draft.loadVisitantCountsLoading = false;
+        draft.loadVisitantCountsError = action.error;
         break;
       default:
         break;

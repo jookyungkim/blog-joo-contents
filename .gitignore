@@ -135,7 +135,7 @@ typings/
 # Serverless directories
 .serverless
 blogJoo/front/build/
-react-joo.pem
+blog-joo.pem
 node_modules
 .env
 .next

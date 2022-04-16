@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 
 const CustomSubDetailView = ({ postId, title, isConnext }) => {
-  console.log("isConnext : ", isConnext);
+  // console.log("isConnext : ", isConnext);
   return (
     <>
       {isConnext ? (

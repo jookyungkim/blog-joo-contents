@@ -21,19 +21,33 @@ const hashtagsRouter = require("./routes/hashtags");
 
 const db = require("./models");
 const passportConfig = require("./passport");
+const dummyDataQuery = require("./models/initData");
 
 dotenv.config();
 const app = express();
 db.sequelize
   .sync()
-  .then(() => {
+  .then((db) => {
+    // console.log("db", db);
     console.log("db 연결 성공");
+    console.log("*** 초기 데이터 삽입 ***");
+    dummyDataQuery();
   })
   .catch(console.error);
 
 passportConfig();
 
 if (process.env.NODE_ENV === "production") {
+  app.enable("trust proxy");
+  app.use(morgan("combined"));
+  app.use(hpp());
+  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(
+    cors({
+      origin: "https://nodejoo.site",
+      credentials: true, // 쿠키를 같이 서버에 전달하고 싶으면 credentials 설정을 해줘야한다.(기본 값은 false)
+    })
+  );
 } else {
   app.use(morgan("dev"));
   app.use(

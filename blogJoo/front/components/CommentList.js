@@ -43,6 +43,8 @@ function CommentList({ mainComments }) {
   );
 }
 
-CommentList.propTypes = {};
+CommentList.propTypes = {
+  mainComments: PropTypes.array.isRequired
+};
 
 export default CommentList;

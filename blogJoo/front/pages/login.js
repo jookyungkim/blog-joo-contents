@@ -2,18 +2,29 @@ import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { END } from "redux-saga";
 import axios from "axios";
+import Router from "next/router";
 
-import { LOG_IN_REQUEST } from "../reducers/user";
+import { LOG_IN_REQUEST, ADD_VISITANT_REQUEST, LOAD_MY_INFO_REQUEST, LOG_OUT_REQUEST } from "../reducers/user";
 import useInput from "../hooks/useInput";
 import wrapper from "../store/configureStore";
+import CustomReactLoading from "../components/CustomReactLoading";
 
 const login = () => {
   const dispatch = useDispatch();
-  const { logInLoading, logInError } = useSelector(state => state.user);
+  const { logInLoading, logInDone, logInError, me } = useSelector(state => state.user);
   const [email, onChangeEmail] = useInput();
   const [password, onChangePassword] = useInput();
 
-  console.log(email);
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+
+    if (me && logInDone) {
+      Router.replace("/");
+    }
+  }, [logInError, logInDone, me]);
+
   const onSubmitForm = useCallback(
     e => {
       e.preventDefault();
@@ -25,36 +36,52 @@ const login = () => {
     [email, password]
   );
 
+  const logoutHandler = useCallback(() => {
+    dispatch({
+      type: LOG_OUT_REQUEST
+    });
+  });
+
   return (
     <>
+      {logInLoading && <CustomReactLoading type={"spin"} color={"#222f3e"} />}
+      {me && logInDone && <CustomReactLoading type={"spin"} color={"#222f3e"} />}
       <div className="login-container">
         <div className="login-inner">
           <div className="login-wrapper">
-            <form className="login-form" onSubmit={onSubmitForm}>
-              <div className="id-gorup">
-                <input
-                  name="user-email"
-                  type="email"
-                  value={email || ""}
-                  onChange={onChangeEmail}
-                  placeholder="1234@naver.com"
-                  required
-                />
+            {me ? (
+              <div className="logout">
+                <button className="common-button" type="button" onClick={logoutHandler}>
+                  관리자 로그아웃
+                </button>
               </div>
-              <div className="pwd-group">
-                <input
-                  name="user-password"
-                  type="password"
-                  value={password || ""}
-                  onChange={onChangePassword}
-                  placeholder="password"
-                  required
-                />
-              </div>
-              <button className="common-button" type="submit">
-                관리자
-              </button>
-            </form>
+            ) : (
+              <form className="login-form" onSubmit={onSubmitForm}>
+                <div className="id-gorup">
+                  <input
+                    name="user-email"
+                    type="email"
+                    value={email || ""}
+                    onChange={onChangeEmail}
+                    placeholder="1234@naver.com"
+                    required
+                  />
+                </div>
+                <div className="pwd-group">
+                  <input
+                    name="user-password"
+                    type="password"
+                    value={password || ""}
+                    onChange={onChangePassword}
+                    placeholder="password"
+                    required
+                  />
+                </div>
+                <button className="common-button" type="submit">
+                  관리자
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>
@@ -81,6 +108,14 @@ const login = () => {
         .login-container .login-wrapper {
           height: 100%;
           border: 1px solid #b8b8b8;
+        }
+
+        .logout {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 100%;
         }
 
         .login-container .login-wrapper .login-form {
@@ -140,6 +175,14 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   if (req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
+
+  store.dispatch({
+    type: LOAD_MY_INFO_REQUEST
+  });
+
+  store.dispatch({
+    type: ADD_VISITANT_REQUEST
+  });
 
   store.dispatch(END);
   await store.sagaTask.toPromise();

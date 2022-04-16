@@ -1,24 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { END } from "redux-saga";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 
 import wrapper from "../store/configureStore";
 import SearchForm from "../components/search";
+import { LOAD_MY_INFO_REQUEST, ADD_VISITANT_REQUEST } from "../reducers/user";
 import { LOAD_SEARCHS_IP_REQUEST } from "../reducers/search";
 import { LOAD_RECENT_HASHTAGS_REQUEST, LOAD_POPULAR_HASHTAGS_REQUEST } from "../reducers/hashtag";
+import CustomReactLoading from "../components/CustomReactLoading";
 
 const search = () => {
-  const { recentHashtags, popularHashtags } = useSelector(state => state.hashtag);
+  const dispatch = useDispatch();
+  const {
+    recentHashtags,
+    popularHashtags,
+    loadRecentHashtagsLoading,
+    loadRecentHashtagsDone,
+    loadPopularHashtagsLoading,
+    loadPopularHashtagsDone
+  } = useSelector(state => state.hashtag);
+  const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (recentHashtags.length === 0 && !loadRecentHashtagsDone) {
+      dispatch({
+        type: LOAD_RECENT_HASHTAGS_REQUEST
+      });
+    }
+
+    if (popularHashtags.length === 0 && !loadPopularHashtagsDone) {
+      dispatch({
+        type: LOAD_POPULAR_HASHTAGS_REQUEST
+      });
+    }
+  }, [loadRecentHashtagsDone, loadPopularHashtagsDone]);
+
+  useEffect(() => {
+    if (loadRecentHashtagsLoading || loadPopularHashtagsLoading) setIsLoading(true);
+    else setIsLoading(false);
+  }, [isLoading, loadRecentHashtagsLoading, loadPopularHashtagsLoading]);
+
+  console.log("isLoading : ", isLoading);
   return (
-    <div>
+    <>
+      {isLoading && <CustomReactLoading type={"spin"} color={"#222f3e"} />}
       <div className="search-container">
         <div className="inner">
           <div className="search-wrapper">
             <h2>무엇을 찾고 계산가요?</h2>
-            <SearchForm />
+            <SearchForm setIsLoading={setIsLoading} />
             {/* <div className="input-search-group">
               <div className="search-input">
                 <input
@@ -210,7 +242,7 @@ const search = () => {
           /* justify-content: center; */
         }
       `}</style>
-    </div>
+    </>
   );
 };
 
@@ -227,15 +259,11 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
 
   // console.log("index getServerSideProps 흐름 확인");
   store.dispatch({
-    type: LOAD_SEARCHS_IP_REQUEST
+    type: LOAD_MY_INFO_REQUEST
   });
 
   store.dispatch({
-    type: LOAD_RECENT_HASHTAGS_REQUEST
-  });
-
-  store.dispatch({
-    type: LOAD_POPULAR_HASHTAGS_REQUEST
+    type: ADD_VISITANT_REQUEST
   });
 
   store.dispatch(END);

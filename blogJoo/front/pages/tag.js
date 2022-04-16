@@ -1,38 +1,52 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { END } from "redux-saga";
 
-const tag = () => {
+import wrapper from "../store/configureStore";
+import { LOAD_MY_INFO_REQUEST, ADD_VISITANT_REQUEST } from "../reducers/user";
+import { LOAD_RECENT_HASHTAGS_REQUEST, LOAD_POPULAR_HASHTAGS_REQUEST } from "../reducers/hashtag";
+import CustomReactLoading from "../components/CustomReactLoading";
+
+const tags = () => {
+  const dispatch = useDispatch();
+  const { recentHashtags, popularHashtags, loadPopularHashtagsLoading, loadPopularHashtagsDone } = useSelector(
+    state => state.hashtag
+  );
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // dispatch({
+    //   type: LOAD_RECENT_HASHTAGS_REQUEST
+    // });
+    if (popularHashtags.length === 0 && !loadPopularHashtagsDone) {
+      dispatch({
+        type: LOAD_POPULAR_HASHTAGS_REQUEST
+      });
+    }
+  }, [popularHashtags, loadPopularHashtagsDone]);
+
+  useEffect(() => {
+    if (loadPopularHashtagsLoading) setIsLoading(true);
+    else setIsLoading(false);
+  }, [loadPopularHashtagsLoading, isLoading]);
+
+  // console.log("태그 ", loadPopularHashtagsLoading);
+  // console.log("isLoading ", isLoading);
   return (
     <>
+      {isLoading && <CustomReactLoading type={"spin"} color={"#222f3e"} />}
       <div className="tag-container">
         <div className="inner">
           <div className="tag-wrapper">
             <h2>인기태그</h2>
             <div className="tag-group">
-              <a href="#none">html</a>
-              <a href="#none">css</a>
-              <a href="#none">javascript</a>
-              <a href="#none">java</a>
-              <a href="#none">sql</a>
-              <a href="#none">html</a>
-              <a href="#none">css</a>
-              <a href="#none">javascript</a>
-              <a href="#none">java</a>
-              <a href="#none">sql</a>
-              <a href="#none">html</a>
-              <a href="#none">css</a>
-              <a href="#none">javascript</a>
-              <a href="#none">java</a>
-              <a href="#none">sql</a>
-              <a href="#none">html</a>
-              <a href="#none">css</a>
-              <a href="#none">javascript</a>
-              <a href="#none">java</a>
-              <a href="#none">sql</a>
-              <a href="#none">html</a>
-              <a href="#none">css</a>
-              <a href="#none">javascript</a>
-              <a href="#none">java</a>
-              <a href="#none">sql</a>
+              {popularHashtags.map(tag => (
+                <Link key={tag.id} href={`/posts/tags/${tag.keyword}`}>
+                  <a>{tag.keyword}</a>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -97,4 +111,26 @@ const tag = () => {
   );
 };
 
-export default tag;
+export const getServerSideProps = wrapper.getServerSideProps(store => async ({ req, res, ...etc }) => {
+  // **** 매우중요 ****
+  // 쿠키를 프론트 서버에서 벡엔드 서버로 보내준다. 브라우저는 간섭을 못한다.
+  // 실제 내 pc 쿠키가 있을때만 넣어주고 없을때는 "" 초기화 해주기
+
+  const cookie = req ? req.headers.cookie : "";
+  axios.defaults.headers.Cookie = "";
+  if (req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+
+  // store.dispatch({
+  //   type: LOAD_MY_INFO_REQUEST
+  // });
+
+  store.dispatch({
+    type: ADD_VISITANT_REQUEST
+  });
+
+  store.dispatch(END);
+  await store.sagaTask.toPromise();
+});
+export default tags;

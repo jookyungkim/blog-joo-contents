@@ -25,7 +25,12 @@ function commentForm({ postId }) {
   const addCommentHandler = useCallback(
     e => {
       // e.preventDefault();
-      console.log("commentForm text : ", text);
+      // console.log("commentForm text : ", text);
+
+      if (!text) {
+        return alert("댓글을 달아주세요");
+      }
+
       dispatch({
         type: ADD_COMMENT_REQUEST,
         data: { postId, text, name, password: "" }
@@ -165,6 +170,8 @@ function commentForm({ postId }) {
   );
 }
 
-commentForm.propTypes = {};
+commentForm.propTypes = {
+  postId: PropTypes.number.isRequired
+};
 
 export default commentForm;

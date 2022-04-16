@@ -5,12 +5,16 @@ import produce from "../utill/produce";
 export const initialState = {
   imagePaths: [],
   mainPosts: [],
+  sliderPosts: [],
   singlePost: null,
   imagePath: null,
   subLinkPosts: [],
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
+  loadSliderPostsLoading: false,
+  loadSliderPostsDone: false,
+  loadSliderPostsError: null,
   loadhashtagPostsLoading: false,
   loadhashtagPostsDone: false,
   loadhashtagPostsError: null,
@@ -29,7 +33,7 @@ export const initialState = {
   updatePostLoading: false,
   updatePostDone: false,
   updatePostError: null,
-  hasMorePosts: true,
+  hasMorePosts: false,
   uploadImageLoading: false,
   uploadImageDone: false,
   uploadImageError: null,
@@ -70,6 +74,10 @@ export const LOAD_HASHTAG_POSTS_FAILURE = "LOAD_HASHTAG_POSTS_FAILURE";
 export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
 export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
 export const LOAD_POSTS_FAILURE = "LOAD_POSTS_FAILURE";
+
+export const LOAD_SLIDER_POSTS_REQUEST = "LOAD_SLIDER_POSTS_REQUEST";
+export const LOAD_SLIDER_POSTS_SUCCESS = "LOAD_SLIDER_POSTS_SUCCESS";
+export const LOAD_SLIDER_POSTS_FAILURE = "LOAD_SLIDER_POSTS_FAILURE";
 
 export const LOAD_LINK_POSTS_REQUEST = "LOAD_LINK_POSTS_REQUEST";
 export const LOAD_LINK_POSTS_SUCCESS = "LOAD_LINK_POSTS_SUCCESS";
@@ -120,7 +128,7 @@ const reducer = (state = initialState, action) => {
         draft.loadPostsLoading = true;
         draft.loadPostsDone = false;
         draft.loadPostsError = null;
-        draft.addPostDone = false;
+        draft.hasMorePosts = false;
         break;
       case LOAD_POSTS_SUCCESS:
         draft.loadPostsLoading = false;
@@ -131,6 +139,21 @@ const reducer = (state = initialState, action) => {
       case LOAD_POSTS_FAILURE:
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
+        draft.hasMorePosts = false;
+        break;
+      case LOAD_SLIDER_POSTS_REQUEST:
+        draft.loadSliderPostsLoading = true;
+        draft.loadSliderPostsDone = false;
+        draft.loadSliderPostsError = null;
+        break;
+      case LOAD_SLIDER_POSTS_SUCCESS:
+        draft.loadSliderPostsLoading = false;
+        draft.loadSliderPostsDone = true;
+        draft.sliderPosts = action.data;
+        break;
+      case LOAD_SLIDER_POSTS_FAILURE:
+        draft.loadSliderPostsLoading = false;
+        draft.loadSliderPostsError = action.error;
         break;
       case LOAD_HASHTAG_POSTS_REQUEST:
         draft.loadHashtagPostsLoading = true;
@@ -155,7 +178,7 @@ const reducer = (state = initialState, action) => {
       case LOAD_LINK_POSTS_SUCCESS:
         draft.loadLinkPostsLoading = false;
         draft.loadLinkPostsDone = true;
-        draft.subLinkPosts = draft.subLinkPosts.concat(action.data);
+        draft.subLinkPosts = action.data;
         break;
       case LOAD_LINK_POSTS_FAILURE:
         draft.loadLinkPostsLoading = false;

@@ -6,11 +6,9 @@ import axios from "axios";
 import { END } from "redux-saga";
 import DOMPurify from "isomorphic-dompurify";
 import styled from "styled-components";
-// import requestIp from "request-ip";
-import ip from "ip";
-import publicIp from "react-public-ip";
 
 import wrapper from "../../store/configureStore";
+import { LOAD_MY_INFO_REQUEST, ADD_VISITANT_REQUEST } from "../../reducers/user";
 import {
   LOAD_POST_REQUEST,
   IS_LIKE_REQUEST,
@@ -23,19 +21,13 @@ import { LOAD_COMMENTS_REQUEST } from "../../reducers/comment";
 
 import CustomSubDetailView from "../../components/CustomSubDetailView";
 import CommentForm from "../../components/CommentForm";
+import CustomReactLoading from "../../components/CustomReactLoading";
 
 const CustomEditorView = styled.div`
   img {
     width: 100%;
   }
 `;
-
-// const CustomSubDetailView = styled.div`
-
-// `;
-
-// const ipv4 = (await publicIp.v4()) || "";
-
 const postView = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -43,15 +35,60 @@ const postView = () => {
   const postId = parseInt(id, 10);
   const ref = useRef(null);
 
-  const { singlePost, isLike, subLinkPosts, removePostDone } = useSelector(state => state.post);
+  const { me } = useSelector(state => state.user);
+  const { loadCommentsLoading, loadCommentsDone } = useSelector(state => state.comment);
+  const {
+    singlePost,
+    isLike,
+    subLinkPosts,
+    removePostDone,
+    isLikeDone,
+    isLikeLoading,
+    loadLinkPostsLoading,
+    loadLinkPostsDone
+  } = useSelector(state => state.post);
   const { Images, postHashtags } = singlePost;
   const firstSrc = Images[0]?.src;
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isLikeDone) {
+      dispatch({
+        type: IS_LIKE_REQUEST,
+        data: postId
+      });
+    }
+
+    if (!loadLinkPostsDone) {
+      dispatch({
+        type: LOAD_LINK_POSTS_REQUEST,
+        data: { id: postId, offset: 2, limit: 4 }
+      });
+    }
+
+    if (!loadCommentsDone) {
+      dispatch({
+        type: LOAD_COMMENTS_REQUEST,
+        data: { postId }
+      });
+    }
+  }, [isLikeDone, loadLinkPostsDone, loadCommentsDone]);
+
+  useEffect(() => {
+    if (isLikeLoading || loadLinkPostsLoading || loadCommentsLoading) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [isLikeLoading, loadLinkPostsLoading, loadCommentsLoading, isLoading]);
+
   useEffect(() => {
     if (removePostDone) {
+      setIsLoading(true);
       Router.replace("/");
     }
-  }, [removePostDone]);
+  }, [removePostDone, isLoading]);
 
   const likeHandler = useCallback(() => {
     if (isLike) {
@@ -69,13 +106,21 @@ const postView = () => {
 
   const updateHandler = useCallback(
     e => {
+      if (!me) {
+        return alert("회원 정보가 없습니다.");
+      }
+      setIsLoading(true);
       Router.replace(`/postModify/${id}`);
     },
-    [id]
+    [id, me, isLoading]
   );
 
   const removeHandler = useCallback(
     e => {
+      if (!me) {
+        return alert("회원 정보가 없습니다.");
+      }
+
       if (window.confirm("삭제하시겠습니까?")) {
         dispatch({
           type: REMOVE_POST_REQUEST,
@@ -83,11 +128,15 @@ const postView = () => {
         });
       }
     },
-    [postId]
+    [postId, me]
   );
+  const likedHandler = useCallback(() => {
+    setIsLoading(true);
+  }, [isLoading]);
 
   return (
     <>
+      {isLoading && <CustomReactLoading type={"spin"} color={"#222f3e"} />}
       <div className="postView-container">
         <div className="slider-form">
           <img src={firstSrc} alt="" />
@@ -106,14 +155,16 @@ const postView = () => {
                   </button>
                   {/* <button className="common-button">신고하기</button> */}
                 </div>
-                <div className="button-status-group">
-                  <button className="common-button" onClick={updateHandler}>
-                    수정
-                  </button>
-                  <button className="common-button" onClick={removeHandler}>
-                    삭제
-                  </button>
-                </div>
+                {me && (
+                  <div className="button-status-group">
+                    <button className="common-button" onClick={updateHandler}>
+                      수정
+                    </button>
+                    <button className="common-button" onClick={removeHandler}>
+                      삭제
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="beforeAfter-link-group">
                 {/* <div className="beforeAfter-title">
@@ -566,6 +617,14 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   if (req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
+  store.dispatch({
+    type: LOAD_MY_INFO_REQUEST
+  });
+
+  store.dispatch({
+    type: ADD_VISITANT_REQUEST
+  });
+
   // const router = useRouter();
   // const { name } = router.query;
   // console.log("etc$% ", etc.params);
@@ -575,22 +634,6 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   store.dispatch({
     type: LOAD_POST_REQUEST,
     data: postId
-  });
-
-  // console.log(" ip**** ", ipv);
-  store.dispatch({
-    type: IS_LIKE_REQUEST,
-    data: postId
-  });
-
-  store.dispatch({
-    type: LOAD_LINK_POSTS_REQUEST,
-    data: { id: postId, offset: 2, limit: 4 }
-  });
-
-  store.dispatch({
-    type: LOAD_COMMENTS_REQUEST,
-    data: { postId }
   });
 
   store.dispatch(END);

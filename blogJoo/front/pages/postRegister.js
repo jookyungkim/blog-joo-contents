@@ -6,11 +6,9 @@ import { END } from "redux-saga";
 import { useDispatch, useSelector } from "react-redux";
 
 import wrapper from "../store/configureStore";
-import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import { LOAD_MY_INFO_REQUEST, ADD_VISITANT_REQUEST } from "../reducers/user";
 import { ADD_POST_REQUEST } from "../reducers/post";
 import userInput from "../hooks/useInput";
-
-// import Editor from "../components/editor";
 
 const Editor = dynamic(
   async () => {
@@ -24,27 +22,35 @@ const Editor = dynamic(
 
 const postRegister = () => {
   const dispatch = useDispatch();
+  const { me } = useSelector(state => state.user);
   const { addPostDone, addPostError } = useSelector(state => state.post);
   useEffect(() => {
-    if (addPostDone) {
+    if (!me) {
       Router.replace("/");
     }
-  }, [addPostDone]);
+  }, [me]);
 
   useEffect(() => {
     if (addPostError) {
       alert(addPostError);
     }
-  }, [addPostError]);
+
+    if (addPostDone) {
+      Router.replace("/");
+    }
+  }, [addPostDone, addPostError]);
 
   const [comboBox, setComboBox] = useState("2");
   const [content, setContent] = useState(null);
   const [title, onChangeTitle] = userInput(null);
 
-  const onChangeComboBox = useCallback(e => {
-    // console.log("comboBox value", e.target.value);
-    setComboBox(e.target.value);
-  }, comboBox);
+  const onChangeComboBox = useCallback(
+    e => {
+      // console.log("comboBox value", e.target.value);
+      setComboBox(e.target.value);
+    },
+    [comboBox]
+  );
 
   const handleChange = useCallback(
     value => {
@@ -58,13 +64,24 @@ const postRegister = () => {
       e.preventDefault();
 
       // console.log("comboBox ", comboBox);
+      if (!me) {
+        return alert("로그인 정보가 없습니다.");
+      }
+
+      if (!title) {
+        return alert("타이틀은 필수 항목 입니다.");
+      }
+
+      if (!content) {
+        return alert("컨텐츠는 필수 항목입니다.");
+      }
 
       dispatch({
         type: ADD_POST_REQUEST,
         data: { content, title, comboBox }
       });
     },
-    [content, title]
+    [content, title, me, comboBox]
   );
 
   const cancelButton = useCallback(() => {
@@ -212,6 +229,10 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
 
   store.dispatch({
     type: LOAD_MY_INFO_REQUEST
+  });
+
+  store.dispatch({
+    type: ADD_VISITANT_REQUEST
   });
 
   store.dispatch(END);

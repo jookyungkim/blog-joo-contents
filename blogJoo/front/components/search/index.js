@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Router from "next/router";
 
 import SearchItems from "./SearchItems";
-import { ADD_SEARCH_REQUEST } from "../../reducers/search";
+import { ADD_SEARCH_REQUEST, LOAD_SEARCHS_IP_REQUEST } from "../../reducers/search";
 import useInput from "../../hooks/useInput";
 
-const SearchForm = () => {
-  const disipatch = useDispatch();
-  const { mainSearchs, addSearchDone, loadSearchsIpDone } = useSelector(state => state.search);
+const SearchForm = ({ setIsLoading }) => {
+  const dispatch = useDispatch();
+  const { mainSearchs, addSearchDone, loadSearchsIpDone, loadSearchsLading } = useSelector(state => state.search);
 
   // const [searchField, setSearchField] = useState("");
   const [filteredDatas, setFilteredDatas] = useState([]);
@@ -19,10 +19,21 @@ const SearchForm = () => {
   // const [item, setItem] = useState();
 
   useEffect(() => {
+    if (mainSearchs.length === 0 && !loadSearchsIpDone) {
+      dispatch({
+        type: LOAD_SEARCHS_IP_REQUEST
+      });
+    }
+
     if (addSearchDone) {
+      setIsLoading(true);
       Router.replace(`/posts/${searchField}`);
     }
-  }, [addSearchDone]);
+
+    if (loadSearchsLading) {
+      setIsLoading(true);
+    }
+  }, [addSearchDone, loadSearchsIpDone, mainSearchs, setIsLoading, loadSearchsLading]);
 
   useEffect(() => {
     if (isFocus) {
@@ -58,7 +69,7 @@ const SearchForm = () => {
       // alert("동작확인");
       // console.log("searchField ", searchField);
       if (!searchField) return;
-      disipatch({
+      dispatch({
         type: ADD_SEARCH_REQUEST,
         data: { text: searchField }
       });
@@ -79,7 +90,7 @@ const SearchForm = () => {
       // console.log("searchField enter", searchField);
       if (isFocus && searchField) {
         if (e.key === "Enter") {
-          disipatch({
+          dispatch({
             type: ADD_SEARCH_REQUEST,
             data: { text: searchField }
           });
