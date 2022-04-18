@@ -1,1 +1,1 @@
-export const backUrl = process.env.NODE_ENV === "production" ? "http://3.36.118.227" : "http://localhost:3065";
+export const backUrl = process.env.NODE_ENV === "production" ? "http://api.blogjoo.site" : "http://localhost:3065";

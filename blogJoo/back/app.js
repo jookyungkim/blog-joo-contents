@@ -72,8 +72,8 @@ app.use(
     proxy: process.env.NODE_ENV === "production",
     cookie: {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === "production", // https 적용하면 false 에서 true 변경해준다.
-      // domain: process.env.NODE_ENV === "production" && ".nodejoo.site",
+      secure: process.env.NODE_ENV === "production", // https 적용하면 false 에서 true 변경해준다.
+      domain: process.env.NODE_ENV === "production" && ".blogjoo.site",
     },
   })
 );
