@@ -44,7 +44,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(
     cors({
-      origin: ["https://nodejoo.site", "http://13.124.209.215"],
+      origin: ["https://nodejoo.site", "http://3.36.118.227"],
       credentials: true, // 쿠키를 같이 서버에 전달하고 싶으면 credentials 설정을 해줘야한다.(기본 값은 false)
     })
   );
