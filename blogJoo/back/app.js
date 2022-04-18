@@ -64,6 +64,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
+const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(
   session({
     saveUninitialized: false,
@@ -74,6 +75,7 @@ app.use(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // https 적용하면 false 에서 true 변경해준다.
       domain: process.env.NODE_ENV === "production" && ".blogjoo.site",
+      expires: expiryDate,
     },
   })
 );
