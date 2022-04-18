@@ -105,7 +105,7 @@ app.use((err, req, res, next) => {
 // });
 
 if (process.env.NODE_ENV === "production") {
-  app.listen(80, () => {
+  app.listen(3065, () => {
     console.log("서버 실행 중");
   });
 } else {
