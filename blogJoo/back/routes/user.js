@@ -87,8 +87,9 @@ router.post("/visitant", async (req, res, next) => {
   try {
     const cloneToDate = today.clone();
     cloneToDate.startOf("day").fromNow(); // 2022-04-12 00:00:00
-    // console.log(today);
-    // console.log();
+
+    console.log("today ", today);
+    console.log("cloneToDate : ", cloneToDate);
 
     const visitant = await Visitant.findOne({
       where: {
@@ -99,7 +100,6 @@ router.post("/visitant", async (req, res, next) => {
         },
       },
     });
-
     if (!visitant) {
       await Visitant.create({
         ip,
