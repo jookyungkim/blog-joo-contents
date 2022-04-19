@@ -47,12 +47,12 @@ router.get("/popular", async (req, res, next) => {
          FROM (
                 SELECT HASHTAGID
                     , COUNT(POSTID) CNT
-                from react_nodejoo.POSTHASHTAG
+                from postHashtag
                 GROUP BY HASHTAGID
                 ORDER BY CNT, HASHTAGID desc 
                 LIMIT :limit
               ) AA,
-              react_nodejoo.HASHTAGS BB
+              hashtags BB
       
          WHERE AA.HASHTAGID = BB.ID  
       `,
