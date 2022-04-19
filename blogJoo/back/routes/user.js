@@ -7,6 +7,8 @@ const { getUserIP } = require("../utill");
 const moment = require("moment");
 const { isLoggedIn, isNotLoggedIn } = require("./mddlewares");
 
+moment.tz.setDefault("Asia/Seoul");
+
 const today = moment();
 const router = express.Router();
 
@@ -88,8 +90,8 @@ router.post("/visitant", async (req, res, next) => {
     const cloneToDate = today.clone();
     cloneToDate.startOf("day").fromNow(); // 2022-04-12 00:00:00
 
-    console.log("today ", today);
-    console.log("cloneToDate : ", cloneToDate);
+    //console.log("today ", today);
+    //console.log("cloneToDate : ", cloneToDate);
 
     const visitant = await Visitant.findOne({
       where: {
