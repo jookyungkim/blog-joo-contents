@@ -48,7 +48,7 @@ function index() {
         data: { limit: 3 }
       });
     }
-  }, [mainPosts, loadPostsDone]);
+  }, [mainPosts, loadPostsDone, addVisitantDone]);
   useEffect(() => {
     if (loadPostsLoading || loadSliderPostsLoading) setIsLoading(true);
     else setIsLoading(false);
