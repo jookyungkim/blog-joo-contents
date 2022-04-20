@@ -123,12 +123,12 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   });
 
   // const ip = requestIp.getClientIp(req);
-  const ip = "12345";
-  console.log("client ip : ", ip);
+  const clientIp = "12345";
+  console.log("client ip : ", clientIp);
 
   store.dispatch({
     type: ADD_VISITANT_REQUEST,
-    data: { ip }
+    data: { clientIp }
   });
 
   store.dispatch({

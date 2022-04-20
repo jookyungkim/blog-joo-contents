@@ -84,7 +84,8 @@ router.post("/visitant", async (req, res, next) => {
   // POST /user/visitant
   // const ip = getUserIP(req);
   try {
-    if (!req.body.ip) res.status(200).send("ip not fiond");
+    console.log("client Ip ", req.body.clientIp);
+    // if (!req.body.clientIp) res.status(200).send("ip not fiond");
     const cloneToDate = today.clone();
     cloneToDate.startOf("day").fromNow(); // 2022-04-12 00:00:00
 
@@ -93,7 +94,7 @@ router.post("/visitant", async (req, res, next) => {
 
     const visitant = await Visitant.findOne({
       where: {
-        ip: req.body.ip,
+        ip: req.body.clientIp,
         createdAt: {
           [Op.lte]: today, // <=
           [Op.gte]: cloneToDate, // >=
@@ -102,7 +103,7 @@ router.post("/visitant", async (req, res, next) => {
     });
     if (!visitant) {
       await Visitant.create({
-        ip: req.body.ip,
+        ip: req.body.clientIp,
         createdAt: today,
       });
     }
