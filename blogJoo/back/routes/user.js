@@ -3,13 +3,10 @@ const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
 const passport = require("passport");
 const { User, Visitant } = require("../models");
-const { getUserIP } = require("../utill");
-const moment = require("moment");
+const { getUserIP, getKoreaMoment } = require("../utill");
 const { isLoggedIn, isNotLoggedIn } = require("./mddlewares");
 
-moment.tz.setDefault("Asia/Seoul");
-
-const today = moment();
+const today = getKoreaMoment();
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
@@ -90,8 +87,8 @@ router.post("/visitant", async (req, res, next) => {
     const cloneToDate = today.clone();
     cloneToDate.startOf("day").fromNow(); // 2022-04-12 00:00:00
 
-    //console.log("today ", today);
-    //console.log("cloneToDate : ", cloneToDate);
+    // console.log("today ", today);
+    // console.log("cloneToDate : ", cloneToDate);
 
     const visitant = await Visitant.findOne({
       where: {
