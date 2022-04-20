@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { END } from "redux-saga";
 import Link from "next/link";
+import requestIp from "request-ip";
 
 import AppLayout from "../components/AppLayout";
 import PostList from "../components/PostList";
@@ -117,13 +118,16 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
     axios.defaults.headers.Cookie = cookie;
   }
 
-  // console.log("index getServerSideProps 흐름 확인");
   store.dispatch({
     type: LOAD_MY_INFO_REQUEST
   });
 
+  const ip = requestIp.getClientIp(req);
+  console.log("client ip : ", ip);
+
   store.dispatch({
-    type: ADD_VISITANT_REQUEST
+    type: ADD_VISITANT_REQUEST,
+    data: { ip }
   });
 
   store.dispatch({

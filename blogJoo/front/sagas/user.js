@@ -79,13 +79,13 @@ function* loadMyInfo() {
   }
 }
 
-function addVisitantAPI() {
-  return axios.post("/user/visitant");
+function addVisitantAPI(data) {
+  return axios.post("/user/visitant", data);
 }
 
-function* addVisitant() {
+function* addVisitant(action) {
   try {
-    const result = yield call(addVisitantAPI);
+    const result = yield call(addVisitantAPI, action.data);
     yield put({
       type: ADD_VISITANT_SUCCESS,
       data: result.data
