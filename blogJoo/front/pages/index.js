@@ -29,12 +29,12 @@ function index() {
 
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    if (!addVisitantDone) {
-      dispatch({
-        type: ADD_VISITANT_REQUEST,
-        data: { ip: "22.21.123.123" }
-      });
-    }
+    // if (!addVisitantDone) {
+    //   dispatch({
+    //     type: ADD_VISITANT_REQUEST,
+    //     data: { ip: "22.21.123.123" }
+    //   });
+    // }
 
     if (mainPosts.length === 0 && !loadPostsDone) {
       dispatch({
@@ -129,14 +129,14 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
     type: LOAD_MY_INFO_REQUEST
   });
 
-  // const clientIp = requestIp.getClientIp(req);
-  // //const clientIp = "12345";
-  // console.log("client ip : ", clientIp);
+  const ip = requestIp.getClientIp(req);
+  //const clientIp = "12345";
+  console.log("client ip : ", ip);
 
-  // store.dispatch({
-  //   type: ADD_VISITANT_REQUEST,
-  //   data: { clientIp }
-  // });
+  store.dispatch({
+    type: ADD_VISITANT_REQUEST,
+    data: { ip }
+  });
 
   store.dispatch({
     type: LOAD_VISITANT_COUNTS_REQUEST
