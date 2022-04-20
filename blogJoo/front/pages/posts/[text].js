@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Head from "next/head";
 import axios from "axios";
 import { END } from "redux-saga";
+import requestIp from "request-ip";
 
 import wrapper from "../../store/configureStore";
 import AppLayout from "../../components/AppLayout";
@@ -117,8 +118,11 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
     type: LOAD_MY_INFO_REQUEST
   });
 
+  const ip = requestIp.getClientIp(req);
+  // console.log("client ip : ", ip);
   store.dispatch({
-    type: ADD_VISITANT_REQUEST
+    type: ADD_VISITANT_REQUEST,
+    data: { ip }
   });
 
   store.dispatch({

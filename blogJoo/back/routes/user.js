@@ -82,9 +82,10 @@ router.get("/loadMyInfo", async (req, res, next) => {
 
 router.post("/visitant", async (req, res, next) => {
   // POST /user/visitant
-  const clientIp = getUserIP(req);
+  const clientIp = req.body.ip;
   console.log("clientIp : ", clientIp);
   console.log("body : ", req.body);
+
   try {
     // console.log("client Ip ", req.body.clientIp);
     // if (!req.body.clientIp) res.status(200).send("ip not fiond");
