@@ -16,7 +16,7 @@ import CustomReactLoading from "../components/CustomReactLoading";
 
 function index() {
   const dispatch = useDispatch();
-  const { me } = useSelector(state => state.user);
+  const { me, addVisitantDone } = useSelector(state => state.user);
   const {
     mainPosts,
     hasMorePosts,
@@ -29,6 +29,13 @@ function index() {
 
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
+    if (!addVisitantDone) {
+      dispatch({
+        type: ADD_VISITANT_REQUEST,
+        data: { ip: "22.21.123.123" }
+      });
+    }
+
     if (mainPosts.length === 0 && !loadPostsDone) {
       dispatch({
         type: LOAD_POSTS_REQUEST
@@ -122,14 +129,14 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
     type: LOAD_MY_INFO_REQUEST
   });
 
-  const clientIp = requestIp.getClientIp(req);
-  //const clientIp = "12345";
-  console.log("client ip : ", clientIp);
+  // const clientIp = requestIp.getClientIp(req);
+  // //const clientIp = "12345";
+  // console.log("client ip : ", clientIp);
 
-  store.dispatch({
-    type: ADD_VISITANT_REQUEST,
-    data: { clientIp }
-  });
+  // store.dispatch({
+  //   type: ADD_VISITANT_REQUEST,
+  //   data: { clientIp }
+  // });
 
   store.dispatch({
     type: LOAD_VISITANT_COUNTS_REQUEST
